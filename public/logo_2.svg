@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="160" viewBox="0 0 160 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<rect width="160" height="112" fill="#0a0a0f"/>
+<path d="M 90,64 L 90,80" fill="none" stroke="#39ff14"/><path d="M 86,64 L 86,80" fill="none" stroke="#39ff14"/>
+<path d="M 154,32 L 154,80" fill="none" stroke="#39ff14"/><path d="M 150,32 L 150,80" fill="none" stroke="#39ff14"/>
+<path d="M 32,62 L 48,62" fill="none" stroke="#39ff14"/><path d="M 32,66 L 48,66" fill="none" stroke="#39ff14"/>
+<rect class="gray" x="140" y="72" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="140" y="56" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="140" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="140" y="24" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="140" y="8" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="132" y="72" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="132" y="56" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="132" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="132" y="24" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="132" y="8" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="124" y="24" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="124" y="8" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="116" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="116" y="24" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="108" y="56" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="108" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="100" y="56" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="100" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="92" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="92" y="24" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="84" y="24" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="84" y="8" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="76" y="72" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="76" y="56" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="76" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="76" y="24" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="76" y="8" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="68" y="72" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="68" y="56" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="68" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="68" y="24" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="68" y="8" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="52" y="24" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="44" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="44" y="24" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="44" y="8" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="36" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="36" y="8" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="28" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="28" y="8" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="20" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="20" y="8" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="12" y="72" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="12" y="56" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="12" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="12" y="24" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="12" y="8" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="4" y="72" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="4" y="56" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="4" y="40" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="4" y="24" width="8" height="16" fill="#39ff14"/>
+<rect class="gray" x="4" y="8" width="8" height="16" fill="#39ff14"/>
+<g class="text" fill="#39ff14">
+<text x="56" y="20">╗</text>
+<text x="96" y="20">╗</text>
+<text x="152" y="20">╗</text>
+<text x="32" y="36">╔══</text>
+<text x="64" y="36">╗</text>
+<text x="104" y="36">╗</text>
+<text x="60" y="52">╔╝</text>
+<text x="88" y="52">╔</text>
+<text x="128" y="52">╔</text>
+<text x="24" y="68">╔</text>
+<text x="56" y="68">╝</text>
+<text x="96" y="68">╚</text>
+<text x="124" y="68">╔╝</text>
+<text x="24" y="84">║</text>
+<text x="112" y="84">╚═╝</text>
+<text x="16" y="100">╚═╝</text>
+<text x="80" y="100">╚═╝</text>
+<text x="144" y="100">╚═╝</text>
+</g>
+</svg>

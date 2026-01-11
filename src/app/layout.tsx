@@ -40,6 +40,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Prateek Kumar Mohanty' }],
   creator: 'Prateek Kumar Mohanty',
+  icons: {
+    icon: '/logo_2.svg',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
