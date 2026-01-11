@@ -37,7 +37,7 @@ const bioLines = [
 const skills = [
   { category: 'frontend', items: ['React', 'Next.js', 'Flutter', 'TypeScript'] },
   { category: 'backend', items: ['Node.js', 'Python', 'FastAPI', 'GraphQL'] },
-  { category: 'cloud', items: ['GCP', 'AWS', 'Docker', 'Kubernetes'] },
+  { category: 'cloud', items: ['GCP', 'AWS', 'Docker'] },
   { category: 'database', items: ['PostgreSQL', 'MongoDB', 'Redis', 'Firebase'] },
 ];
 

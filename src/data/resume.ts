@@ -247,13 +247,11 @@ export const skills: Skill[] = [
   // Mobile
   { name: "Flutter", category: "mobile", proficiency: 85 },
   { name: "React Native", category: "mobile", proficiency: 75 },
-  { name: "Swift", category: "mobile", proficiency: 70 },
 
   // Cloud
   { name: "AWS", category: "cloud", proficiency: 80 },
   { name: "GCP", category: "cloud", proficiency: 85 },
   { name: "Docker", category: "cloud", proficiency: 80 },
-  { name: "Kubernetes", category: "cloud", proficiency: 70 },
 
   // Database
   { name: "PostgreSQL", category: "database", proficiency: 90 },
@@ -262,10 +260,8 @@ export const skills: Skill[] = [
   { name: "Firebase", category: "database", proficiency: 85 },
 
   // AI/ML
-  { name: "LangChain", category: "ai", proficiency: 80 },
   { name: "OpenAI API", category: "ai", proficiency: 85 },
   { name: "RAG Systems", category: "ai", proficiency: 80 },
-  { name: "Vector DBs", category: "ai", proficiency: 75 },
 
   // Tools
   { name: "Git", category: "tools", proficiency: 95 },
