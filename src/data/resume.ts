@@ -282,7 +282,7 @@ export const socialLinks: SocialLink[] = [
   },
   {
     name: "X",
-    url: "https://x.com/prateekmohanty",
+    url: "https://x.com/strangenoob_sol",
     icon: "x",
   },
   {
