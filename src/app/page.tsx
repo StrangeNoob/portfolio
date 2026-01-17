@@ -5,12 +5,21 @@ import { Projects } from '@/components/sections/Projects';
 import { Skills } from '@/components/sections/Skills';
 import { Contact } from '@/components/sections/Contact';
 import { navItems, personalInfo } from '@/data/resume';
+import { A11Y_IDS } from '@/lib/constants';
 
-export default function Home() {
+export default function Home(): React.JSX.Element {
   return (
     <div className="relative min-h-screen overflow-hidden">
+      {/* Skip to main content link for accessibility */}
+      <a
+        href={`#${A11Y_IDS.MAIN_CONTENT}`}
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-terminal-green focus:text-background focus:rounded-lg focus:font-mono focus:text-sm"
+      >
+        Skip to main content
+      </a>
+
       {/* Subtle gradient rings */}
-      <div className="pointer-events-none absolute inset-0 opacity-50">
+      <div className="pointer-events-none absolute inset-0 opacity-50" aria-hidden="true">
         <div className="absolute -left-32 -top-24 h-72 w-72 rounded-full bg-terminal-green/20 blur-[140px]" />
         <div className="absolute right-0 top-10 h-80 w-80 rounded-full bg-terminal-pink/15 blur-[160px]" />
         <div className="absolute left-1/2 bottom-0 h-96 w-96 -translate-x-1/2 rounded-full bg-terminal-cyan/12 blur-[180px]" />
@@ -20,7 +29,10 @@ export default function Home() {
       <header className="sticky top-0 z-20 border-b border-border/70 bg-background/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-terminal-green/30 via-terminal-cyan/25 to-terminal-pink/25 border border-border flex items-center justify-center text-terminal-green text-lg font-bold glow-ring">
+            <div
+              className="h-10 w-10 rounded-lg bg-gradient-to-br from-terminal-green/30 via-terminal-cyan/25 to-terminal-pink/25 border border-border flex items-center justify-center text-terminal-green text-lg font-bold glow-ring"
+              aria-hidden="true"
+            >
               $
             </div>
             <div>
@@ -29,7 +41,10 @@ export default function Home() {
             </div>
           </div>
 
-          <nav className="ml-auto hidden items-center gap-2 rounded-lg border border-border bg-surface/60 px-2 py-1 text-xs font-mono shadow-lg sm:flex glow-ring">
+          <nav
+            className="ml-auto hidden items-center gap-2 rounded-lg border border-border bg-surface/60 px-2 py-1 text-xs font-mono shadow-lg sm:flex glow-ring"
+            aria-label="Main navigation"
+          >
             {navItems.map((item) => (
               <a
                 key={item.name}
@@ -45,13 +60,14 @@ export default function Home() {
             href={personalInfo.resumeUrl}
             download
             className="hidden sm:inline-flex items-center gap-2 rounded-lg border border-terminal-green bg-terminal-green/10 px-4 py-2 text-sm font-mono text-terminal-green hover:bg-terminal-green hover:text-background transition-colors glow-ring"
+            aria-label="Download resume PDF"
           >
             wget resume.pdf
           </a>
         </div>
       </header>
 
-      <main className="min-h-screen">
+      <main id={A11Y_IDS.MAIN_CONTENT} className="min-h-screen">
         <Hero />
         <About />
         <Experience />

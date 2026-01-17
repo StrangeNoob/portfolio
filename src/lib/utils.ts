@@ -1,19 +1,27 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-export function cn(...inputs: ClassValue[]) {
+/**
+ * Combines class names using clsx and tailwind-merge
+ */
+export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }
 
-export function formatDate(date: string): string {
-  return date;
-}
-
-export function getSkillsByCategory(skills: { category: string }[], category: string) {
+/**
+ * Filters skills by category
+ */
+export function getSkillsByCategory<T extends { category: string }>(
+  skills: T[],
+  category: string
+): T[] {
   return skills.filter((skill) => skill.category === category);
 }
 
-export function scrollToSection(sectionId: string) {
+/**
+ * Scrolls to a section by ID with smooth behavior
+ */
+export function scrollToSection(sectionId: string): void {
   const element = document.getElementById(sectionId);
   if (element) {
     element.scrollIntoView({ behavior: 'smooth' });

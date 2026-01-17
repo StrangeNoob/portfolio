@@ -1,17 +1,17 @@
 'use client';
 
 import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 
-const systemInfo = {
+const SYSTEM_INFO = {
   user: 'prateek-kumar-mohanty',
   role: 'Full Stack Developer',
   location: 'India',
   uptime: '4+ years',
   status: 'active',
-};
+} as const;
 
-const bioLines = [
+const BIO_LINES = [
   '# Developer Profile',
   '',
   'I build software that moves fast and handles scale.',
@@ -32,33 +32,71 @@ const bioLines = [
   '- Built 50+ component UI library @ Frifty',
   '- Led team of 5 developers',
   '- Integrated 3 payment gateways @ Aarna',
-];
+] as const;
 
-const skills = [
+const SKILLS = [
   { category: 'frontend', items: ['React', 'Next.js', 'Flutter', 'TypeScript'] },
   { category: 'backend', items: ['Node.js', 'Python', 'FastAPI', 'GraphQL'] },
   { category: 'cloud', items: ['GCP', 'AWS', 'Docker'] },
   { category: 'database', items: ['PostgreSQL', 'MongoDB', 'Redis', 'Firebase'] },
-];
+] as const;
 
-const metrics = [
+const METRICS = [
   { key: 'api_optimization', value: '98.5%', color: 'text-terminal-green' },
   { key: 'experience_years', value: '4+', color: 'text-terminal-cyan' },
   { key: 'team_size_led', value: '5+', color: 'text-terminal-amber' },
   { key: 'apps_published', value: '2', color: 'text-terminal-purple' },
-];
+] as const;
 
-export function About() {
+export function About(): React.JSX.Element {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+
+  // Memoize the skills JSON rendering
+  const skillsContent = useMemo(
+    () =>
+      SKILLS.map((skill, index) => (
+        <div key={skill.category} className="ml-4">
+          <span className="text-terminal-cyan">{`"${skill.category}"`}</span>
+          <span className="text-foreground-muted">: [</span>
+          <div className="ml-4">
+            {skill.items.map((item, i) => (
+              <span key={item}>
+                <span className="text-terminal-amber">{`"${item}"`}</span>
+                {i < skill.items.length - 1 && <span className="text-foreground-muted">, </span>}
+              </span>
+            ))}
+          </div>
+          <span className="text-foreground-muted">]</span>
+          {index < SKILLS.length - 1 && <span className="text-foreground-muted">,</span>}
+        </div>
+      )),
+    []
+  );
+
+  // Memoize the bio lines with styling
+  const bioContent = useMemo(
+    () =>
+      BIO_LINES.map((line, index) => ({
+        line,
+        className: line.startsWith('#')
+          ? 'text-terminal-green font-bold text-glow'
+          : line.startsWith('-')
+          ? 'text-terminal-cyan'
+          : 'text-foreground-muted',
+        index,
+      })),
+    []
+  );
 
   return (
     <section
       id="about"
       ref={ref}
       className="relative py-24 md:py-32 px-4 grid-bg overflow-hidden"
+      aria-label="About section"
     >
-      <div className="pointer-events-none absolute inset-0 opacity-40">
+      <div className="pointer-events-none absolute inset-0 opacity-40" aria-hidden="true">
         <div className="absolute -left-10 top-10 h-56 w-56 rounded-full bg-terminal-cyan/15 blur-[120px]" />
         <div className="absolute right-0 bottom-0 h-72 w-72 rounded-full bg-terminal-green/15 blur-[140px]" />
       </div>
@@ -73,7 +111,7 @@ export function About() {
           <div className="flex items-center gap-2 text-terminal-green mb-2">
             <span>$</span>
             <span>cat about.md</span>
-            <span className="cursor" />
+            <span className="cursor" aria-hidden="true" />
           </div>
         </motion.div>
 
@@ -86,7 +124,7 @@ export function About() {
           >
             {/* Neofetch-style info */}
             <div className="terminal-window mb-6 glow-ring">
-              <div className="terminal-header">
+              <div className="terminal-header" aria-hidden="true">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
                 <div className="terminal-btn terminal-btn-maximize" />
@@ -95,7 +133,11 @@ export function About() {
               <div className="terminal-body">
                 <div className="flex gap-8">
                   {/* ASCII Logo */}
-                  <pre className="text-terminal-green text-xs hidden md:block">
+                  <pre
+                    className="text-terminal-green text-xs hidden md:block"
+                    aria-label="ASCII art logo with initials PM"
+                    role="img"
+                  >
 {`    ____  __  ___
    / __ \\/  |/  /
   / /_/ / /|_/ /
@@ -111,32 +153,35 @@ export function About() {
                       <span className="text-foreground-muted">@</span>
                       <span className="text-terminal-cyan">portfolio</span>
                     </div>
-                    <div className="text-foreground-muted">──────────────────</div>
+                    <div className="text-foreground-muted" aria-hidden="true">──────────────────</div>
                     <div>
                       <span className="text-terminal-purple">OS:</span>
                       <span className="text-foreground ml-2">Developer v4.0</span>
                     </div>
                     <div>
                       <span className="text-terminal-purple">Host:</span>
-                      <span className="text-foreground ml-2">{systemInfo.user}</span>
+                      <span className="text-foreground ml-2">{SYSTEM_INFO.user}</span>
                     </div>
                     <div>
                       <span className="text-terminal-purple">Role:</span>
-                      <span className="text-foreground ml-2">{systemInfo.role}</span>
+                      <span className="text-foreground ml-2">{SYSTEM_INFO.role}</span>
                     </div>
                     <div>
                       <span className="text-terminal-purple">Location:</span>
-                      <span className="text-foreground ml-2">{systemInfo.location}</span>
+                      <span className="text-foreground ml-2">{SYSTEM_INFO.location}</span>
                     </div>
                     <div>
                       <span className="text-terminal-purple">Uptime:</span>
-                      <span className="text-foreground ml-2">{systemInfo.uptime}</span>
+                      <span className="text-foreground ml-2">{SYSTEM_INFO.uptime}</span>
                     </div>
                     <div>
                       <span className="text-terminal-purple">Status:</span>
                       <span className="text-terminal-green ml-2 flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-terminal-green animate-pulse inline-block" />
-                        {systemInfo.status}
+                        <span
+                          className="w-2 h-2 rounded-full bg-terminal-green animate-pulse inline-block"
+                          aria-hidden="true"
+                        />
+                        {SYSTEM_INFO.status}
                       </span>
                     </div>
                   </div>
@@ -146,30 +191,15 @@ export function About() {
 
             {/* Skills */}
             <div className="terminal-window glow-ring">
-              <div className="terminal-header">
+              <div className="terminal-header" aria-hidden="true">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
                 <div className="terminal-btn terminal-btn-maximize" />
                 <span className="terminal-title">skills.json</span>
               </div>
-              <div className="terminal-body text-sm">
+              <div className="terminal-body text-sm" role="list" aria-label="Technical skills by category">
                 <div className="text-foreground-muted">{'{'}</div>
-                {skills.map((skill, index) => (
-                  <div key={skill.category} className="ml-4">
-                    <span className="text-terminal-cyan">{`"${skill.category}"`}</span>
-                    <span className="text-foreground-muted">: [</span>
-                    <div className="ml-4">
-                      {skill.items.map((item, i) => (
-                        <span key={item}>
-                          <span className="text-terminal-amber">{`"${item}"`}</span>
-                          {i < skill.items.length - 1 && <span className="text-foreground-muted">, </span>}
-                        </span>
-                      ))}
-                    </div>
-                    <span className="text-foreground-muted">]</span>
-                    {index < skills.length - 1 && <span className="text-foreground-muted">,</span>}
-                  </div>
-                ))}
+                {skillsContent}
                 <div className="text-foreground-muted">{'}'}</div>
               </div>
             </div>
@@ -184,26 +214,20 @@ export function About() {
           >
             {/* Bio Terminal */}
             <div className="terminal-window glow-ring">
-              <div className="terminal-header">
+              <div className="terminal-header" aria-hidden="true">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
                 <div className="terminal-btn terminal-btn-maximize" />
                 <span className="terminal-title">about.md</span>
               </div>
               <div className="terminal-body text-sm space-y-0.5 max-h-80 overflow-y-auto">
-                {bioLines.map((line, index) => (
+                {bioContent.map(({ line, className, index }) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0 }}
                     animate={isInView ? { opacity: 1 } : {}}
                     transition={{ duration: 0.1, delay: 0.5 + index * 0.03 }}
-                    className={`${
-                      line.startsWith('#')
-                        ? 'text-terminal-green font-bold text-glow'
-                        : line.startsWith('-')
-                        ? 'text-terminal-cyan'
-                        : 'text-foreground-muted'
-                    }`}
+                    className={className}
                   >
                     {line || '\u00A0'}
                   </motion.div>
@@ -213,25 +237,30 @@ export function About() {
 
             {/* Metrics */}
             <div className="terminal-window glow-ring">
-              <div className="terminal-header">
+              <div className="terminal-header" aria-hidden="true">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
                 <div className="terminal-btn terminal-btn-maximize" />
                 <span className="terminal-title">metrics --export</span>
               </div>
               <div className="terminal-body">
-                <div className="text-xs text-foreground-muted mb-3">
+                <div className="text-xs text-foreground-muted mb-3" aria-hidden="true">
                   $ metrics --format=table
                 </div>
-                <div className="border border-border rounded overflow-hidden bg-surface/40">
+                <div
+                  className="border border-border rounded overflow-hidden bg-surface/40"
+                  role="list"
+                  aria-label="Key performance metrics"
+                >
                   <div className="grid grid-cols-2 text-xs">
-                    {metrics.map((metric, index) => (
+                    {METRICS.map((metric, index) => (
                       <motion.div
                         key={metric.key}
                         initial={{ opacity: 0, y: 10 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.3, delay: 0.8 + index * 0.1 }}
                         className={`p-4 ${index < 2 ? 'border-b border-border' : ''} ${index % 2 === 0 ? 'border-r border-border' : ''}`}
+                        role="listitem"
                       >
                         <div className="text-foreground-muted text-[10px] uppercase tracking-wider mb-1">
                           {metric.key.replace(/_/g, ' ')}

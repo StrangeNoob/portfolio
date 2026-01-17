@@ -1,82 +1,42 @@
 'use client';
 
 import { motion, useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useRef, useId } from 'react';
 import { socialLinks } from '@/data/resume';
+import { useFormSubmission } from '@/hooks/useFormSubmission';
 
-interface FormState {
-  name: string;
-  email: string;
-  message: string;
-}
-
-export function Contact() {
+export function Contact(): React.JSX.Element {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
-  const [formState, setFormState] = useState<FormState>({
-    name: '',
-    email: '',
-    message: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [error, setError] = useState<string | null>(null);
+  // Generate unique IDs for form accessibility
+  const nameId = useId();
+  const emailId = useId();
+  const messageId = useId();
+  const nameErrorId = useId();
+  const emailErrorId = useId();
+  const messageErrorId = useId();
+  const formErrorId = useId();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formState.name || !formState.email || !formState.message) return;
-
-    setIsSubmitting(true);
-    setError(null);
-    setCurrentStep(1);
-
-    try {
-      // Step 1: Validating
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      setCurrentStep(2);
-
-      // Step 2: Connecting & Sending
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formState),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to send message');
-      }
-
-      setCurrentStep(3);
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setFormState({ name: '', email: '', message: '' });
-
-      setTimeout(() => {
-        setIsSubmitted(false);
-        setCurrentStep(0);
-      }, 5000);
-    } catch (err) {
-      setIsSubmitting(false);
-      setCurrentStep(0);
-      setError(err instanceof Error ? err.message : 'Something went wrong');
-
-      setTimeout(() => setError(null), 5000);
-    }
-  };
+  const {
+    formState,
+    setFormState,
+    isSubmitting,
+    isSubmitted,
+    currentStep,
+    error,
+    handleSubmit,
+    clearError,
+  } = useFormSubmission();
 
   return (
     <section
       id="contact"
       ref={ref}
       className="relative py-24 md:py-32 px-4 grid-bg overflow-hidden"
+      aria-label="Contact section"
     >
-      <div className="pointer-events-none absolute inset-0 opacity-30">
+      <div className="pointer-events-none absolute inset-0 opacity-30" aria-hidden="true">
         <div className="absolute left-0 top-10 h-72 w-72 rounded-full bg-terminal-pink/15 blur-[140px]" />
         <div className="absolute right-6 bottom-0 h-80 w-80 rounded-full bg-terminal-green/16 blur-[150px]" />
       </div>
@@ -91,7 +51,7 @@ export function Contact() {
           <div className="flex items-center gap-2 text-terminal-green mb-2">
             <span>$</span>
             <span>./send_message.sh</span>
-            <span className="cursor" />
+            <span className="cursor" aria-hidden="true" />
           </div>
         </motion.div>
 
@@ -104,7 +64,7 @@ export function Contact() {
           >
             {/* Contact Info */}
             <div className="terminal-window mb-6 glow-ring">
-              <div className="terminal-header">
+              <div className="terminal-header" aria-hidden="true">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
                 <div className="terminal-btn terminal-btn-maximize" />
@@ -139,13 +99,13 @@ export function Contact() {
 
             {/* Social Links */}
             <div className="terminal-window glow-ring">
-              <div className="terminal-header">
+              <div className="terminal-header" aria-hidden="true">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
                 <div className="terminal-btn terminal-btn-maximize" />
                 <span className="terminal-title">social_links.txt</span>
               </div>
-              <div className="terminal-body text-sm space-y-2">
+              <nav className="terminal-body text-sm space-y-2" aria-label="Social links">
                 {socialLinks.map((link, index) => (
                   <motion.a
                     key={link.name}
@@ -156,8 +116,9 @@ export function Contact() {
                     animate={isInView ? { opacity: 1, x: 0 } : {}}
                     transition={{ duration: 0.2, delay: 0.4 + index * 0.1 }}
                     className="flex items-center gap-3 p-2 -mx-2 rounded hover:bg-surface transition-colors group"
+                    aria-label={`Visit ${link.name} profile`}
                   >
-                    <span className="text-terminal-green">→</span>
+                    <span className="text-terminal-green" aria-hidden="true">→</span>
                     <span className="text-terminal-cyan group-hover:text-glow">
                       {link.name}
                     </span>
@@ -166,7 +127,7 @@ export function Contact() {
                     </span>
                   </motion.a>
                 ))}
-              </div>
+              </nav>
             </div>
           </motion.div>
 
@@ -177,7 +138,7 @@ export function Contact() {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <div className="terminal-window glow-ring">
-              <div className="terminal-header">
+              <div className="terminal-header" aria-hidden="true">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
                 <div className="terminal-btn terminal-btn-maximize" />
@@ -189,6 +150,8 @@ export function Contact() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className="text-center py-8"
+                    role="status"
+                    aria-live="polite"
                   >
                     <div className="text-terminal-green text-glow mb-4 text-lg">
                       ✓ Message sent successfully!
@@ -198,13 +161,22 @@ export function Contact() {
                     </div>
                   </motion.div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  <form
+                    onSubmit={handleSubmit}
+                    className="space-y-4"
+                    aria-describedby={error ? formErrorId : undefined}
+                    noValidate
+                  >
                     {/* Name field */}
                     <div>
-                      <label className="block text-xs text-foreground-muted mb-1">
-                        <span className="text-terminal-purple">$</span> name:
+                      <label
+                        htmlFor={nameId}
+                        className="block text-xs text-foreground-muted mb-1"
+                      >
+                        <span className="text-terminal-purple" aria-hidden="true">$</span> name:
                       </label>
                       <input
+                        id={nameId}
                         type="text"
                         value={formState.name}
                         onChange={(e) => setFormState({ ...formState, name: e.target.value })}
@@ -213,15 +185,25 @@ export function Contact() {
                                    font-mono placeholder:text-foreground-muted/50"
                         placeholder="Enter your name"
                         required
+                        aria-required="true"
+                        aria-describedby={nameErrorId}
+                        autoComplete="name"
                       />
+                      <span id={nameErrorId} className="sr-only">
+                        Name is required
+                      </span>
                     </div>
 
                     {/* Email field */}
                     <div>
-                      <label className="block text-xs text-foreground-muted mb-1">
-                        <span className="text-terminal-purple">$</span> email:
+                      <label
+                        htmlFor={emailId}
+                        className="block text-xs text-foreground-muted mb-1"
+                      >
+                        <span className="text-terminal-purple" aria-hidden="true">$</span> email:
                       </label>
                       <input
+                        id={emailId}
                         type="email"
                         value={formState.email}
                         onChange={(e) => setFormState({ ...formState, email: e.target.value })}
@@ -230,15 +212,25 @@ export function Contact() {
                                    font-mono placeholder:text-foreground-muted/50"
                         placeholder="Enter your email"
                         required
+                        aria-required="true"
+                        aria-describedby={emailErrorId}
+                        autoComplete="email"
                       />
+                      <span id={emailErrorId} className="sr-only">
+                        A valid email address is required
+                      </span>
                     </div>
 
                     {/* Message field */}
                     <div>
-                      <label className="block text-xs text-foreground-muted mb-1">
-                        <span className="text-terminal-purple">$</span> message:
+                      <label
+                        htmlFor={messageId}
+                        className="block text-xs text-foreground-muted mb-1"
+                      >
+                        <span className="text-terminal-purple" aria-hidden="true">$</span> message:
                       </label>
                       <textarea
+                        id={messageId}
                         value={formState.message}
                         onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                         rows={5}
@@ -247,7 +239,12 @@ export function Contact() {
                                    font-mono placeholder:text-foreground-muted/50 resize-none"
                         placeholder="Type your message here..."
                         required
+                        aria-required="true"
+                        aria-describedby={messageErrorId}
                       />
+                      <span id={messageErrorId} className="sr-only">
+                        Message is required
+                      </span>
                     </div>
 
                     {/* Submit button */}
@@ -259,6 +256,7 @@ export function Contact() {
                                  hover:bg-terminal-green hover:text-background
                                  disabled:opacity-50 disabled:cursor-not-allowed
                                  transition-all duration-300"
+                      aria-disabled={isSubmitting}
                     >
                       {isSubmitting ? (
                         <span className="flex items-center justify-center gap-2">
@@ -271,7 +269,11 @@ export function Contact() {
 
                     {/* Progress indicator */}
                     {isSubmitting && (
-                      <div className="text-xs text-foreground-muted space-y-1">
+                      <div
+                        className="text-xs text-foreground-muted space-y-1"
+                        role="status"
+                        aria-live="polite"
+                      >
                         <div className={currentStep >= 1 ? 'text-terminal-green' : ''}>
                           {currentStep >= 1 ? '✓' : '○'} Validating input...
                         </div>
@@ -286,8 +288,23 @@ export function Contact() {
 
                     {/* Error message */}
                     {error && (
-                      <div className="text-xs text-red-500 bg-red-500/10 border border-red-500/30 rounded p-3">
-                        <span className="text-red-400">ERROR:</span> {error}
+                      <div
+                        id={formErrorId}
+                        className="text-xs text-red-500 bg-red-500/10 border border-red-500/30 rounded p-3 flex items-start justify-between"
+                        role="alert"
+                        aria-live="assertive"
+                      >
+                        <div>
+                          <span className="text-red-400">ERROR:</span> {error}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={clearError}
+                          className="text-red-400 hover:text-red-300 ml-2 text-sm"
+                          aria-label="Dismiss error message"
+                        >
+                          ×
+                        </button>
                       </div>
                     )}
                   </form>

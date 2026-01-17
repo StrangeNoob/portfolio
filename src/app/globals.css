@@ -10,7 +10,8 @@
 
   /* Text */
   --foreground: #e3e8f0;
-  --foreground-muted: #a3acc0;
+  /* Updated for WCAG AA contrast (4.5:1 minimum against #05060b background) */
+  --foreground-muted: #9ca3b8;
 
   /* Neon accents */
   --terminal-green: #6bff8f;
