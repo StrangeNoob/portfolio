@@ -1,47 +1,49 @@
 @import "tailwindcss";
 
-/* Terminal Theme CSS Variables */
+/* Neon Terminal Theme Tokens */
 :root {
-  /* Terminal dark background */
-  --background: #0d1117;
-  --background-secondary: #161b22;
-  --background-terminal: #0a0e14;
+  /* Core surfaces */
+  --background: #05060b;
+  --background-secondary: #0b0e17;
+  --background-terminal: #05060f;
+  --glass: rgba(255, 255, 255, 0.04);
 
-  /* Terminal text colors */
-  --foreground: #c9d1d9;
-  --foreground-muted: #8b949e;
+  /* Text */
+  --foreground: #e3e8f0;
+  --foreground-muted: #a3acc0;
 
-  /* Terminal accent colors */
-  --terminal-green: #39ff14;
-  --terminal-cyan: #00ffff;
-  --terminal-amber: #ffb000;
-  --terminal-red: #ff5f56;
-  --terminal-yellow: #ffbd2e;
-  --terminal-green-btn: #27c93f;
-  --terminal-purple: #bd93f9;
-  --terminal-pink: #ff79c6;
-  --terminal-blue: #58a6ff;
+  /* Neon accents */
+  --terminal-green: #6bff8f;
+  --terminal-cyan: #42f6ff;
+  --terminal-amber: #ffcf5c;
+  --terminal-red: #ff6b6b;
+  --terminal-yellow: #ffd166;
+  --terminal-green-btn: #2de373;
+  --terminal-purple: #c8a4ff;
+  --terminal-pink: #ff7bd5;
+  --terminal-blue: #6ac8ff;
 
-  /* Primary accent - phosphor green */
-  --accent-primary: #39ff14;
-  --accent-secondary: #00ffff;
-  --accent-tertiary: #ffb000;
+  /* Primary brand trio */
+  --accent-primary: #7bffb2;
+  --accent-secondary: #5ae0ff;
+  --accent-tertiary: #ff7edb;
 
-  /* Surface colors */
-  --surface: #161b22;
-  --surface-hover: #21262d;
-  --border: #30363d;
-  --border-hover: #484f58;
+  /* Surfaces */
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-strong: rgba(255, 255, 255, 0.06);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.14);
 
-  /* Semantic colors */
-  --success: #39ff14;
-  --warning: #ffb000;
-  --error: #ff5f56;
+  /* Semantic */
+  --success: #6bff8f;
+  --warning: #ffcf5c;
+  --error: #ff6b6b;
 
-  /* Terminal prompt */
-  --prompt-user: #39ff14;
-  --prompt-path: #58a6ff;
-  --prompt-symbol: #8b949e;
+  /* Prompt */
+  --prompt-user: #7bffb2;
+  --prompt-path: #5ae0ff;
+  --prompt-symbol: #a3acc0;
 }
 
 @theme inline {
@@ -67,13 +69,13 @@
   --color-terminal-pink: var(--terminal-pink);
   --color-terminal-blue: var(--terminal-blue);
 
-  /* Monospace font as primary */
+  /* Monospace-first typography */
   --font-sans: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
   --font-display: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
   --font-heading: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
   --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
-  /* Custom animations */
+  /* Animations */
   --animate-fade-in: fade-in 0.5s ease-out forwards;
   --animate-slide-up: slide-up 0.5s ease-out forwards;
   --animate-blink: blink 1s step-end infinite;
@@ -137,30 +139,47 @@ html {
 }
 
 body {
-  background: var(--background);
+  background: radial-gradient(circle at 20% 20%, rgba(91, 255, 200, 0.06), transparent 25%),
+    radial-gradient(circle at 80% 0%, rgba(255, 126, 219, 0.08), transparent 30%),
+    radial-gradient(circle at 50% 70%, rgba(90, 224, 255, 0.08), transparent 32%),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-mono);
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
 }
 
-/* CRT Scanline effect overlay */
+/* Scanline + noise overlay */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.15),
-    rgba(0, 0, 0, 0.15) 1px,
-    transparent 1px,
-    transparent 2px
-  );
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.04) 1px,
+      transparent 1px,
+      transparent 2px
+    );
   pointer-events: none;
-  z-index: 9999;
-  opacity: 0.3;
+  z-index: 9998;
+  opacity: 0.25;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(123, 255, 178, 0.08), rgba(90, 224, 255, 0.08), rgba(255, 126, 219, 0.06));
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0.2;
 }
 
 /* Selection styles */
@@ -202,18 +221,19 @@ body::before {
 
 /* Terminal window component */
 .terminal-window {
-  background: var(--background-terminal);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow:
-    0 0 0 1px rgba(57, 255, 20, 0.1),
-    0 4px 20px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 0 0 1px rgba(90, 224, 255, 0.08),
+    0 12px 45px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
 }
 
 .terminal-header {
-  background: var(--surface);
+  background: linear-gradient(90deg, rgba(123, 255, 178, 0.08), rgba(90, 224, 255, 0.08));
   padding: 12px 16px;
   display: flex;
   align-items: center;
@@ -236,11 +256,13 @@ body::before {
   text-align: center;
   color: var(--foreground-muted);
   font-size: 12px;
+  letter-spacing: 0.08em;
 }
 
 .terminal-body {
-  padding: 20px;
+  padding: 22px;
   min-height: 100px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
 }
 
 /* Terminal text styles */
@@ -277,16 +299,16 @@ body::before {
 /* Text glow effect */
 .text-glow {
   text-shadow:
-    0 0 5px currentColor,
-    0 0 10px currentColor;
+    0 0 6px currentColor,
+    0 0 14px currentColor;
 }
 
 .text-glow-strong {
   text-shadow:
-    0 0 5px currentColor,
-    0 0 10px currentColor,
-    0 0 20px currentColor,
-    0 0 40px currentColor;
+    0 0 6px currentColor,
+    0 0 14px currentColor,
+    0 0 28px currentColor,
+    0 0 46px currentColor;
 }
 
 /* ASCII border box */
@@ -373,18 +395,48 @@ body::before {
 .matrix-bg {
   background:
     linear-gradient(180deg,
-      rgba(57, 255, 20, 0.03) 0%,
+      rgba(90, 224, 255, 0.05) 0%,
       transparent 50%,
-      rgba(57, 255, 20, 0.03) 100%
+      rgba(123, 255, 178, 0.05) 100%
     );
 }
 
 /* Retro grid background */
 .grid-bg {
   background-image:
-    linear-gradient(rgba(57, 255, 20, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(57, 255, 20, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(123, 255, 178, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(90, 224, 255, 0.04) 1px, transparent 1px);
   background-size: 50px 50px;
+}
+
+/* Glass panels and glow rings */
+.glass-panel {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+}
+
+.glow-ring {
+  position: relative;
+}
+
+.glow-ring::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg, rgba(123, 255, 178, 0.5), rgba(90, 224, 255, 0.35), rgba(255, 126, 219, 0.35));
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.6;
 }
 
 /* Line numbers for code */
