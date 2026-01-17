@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useBootSequence } from '@/hooks/useBootSequence';
 
 const ASCII_ART = `
  ██████╗ ██████╗  █████╗ ████████╗███████╗███████╗██╗  ██╗
@@ -12,7 +12,7 @@ const ASCII_ART = `
  ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝
 `;
 
-const bootSequence = [
+const BOOT_SEQUENCE = [
   { text: 'BIOS v2.4.1 - Portfolio System', delay: 0 },
   { text: 'Initializing system...', delay: 200 },
   { text: 'Loading kernel modules... [OK]', delay: 400 },
@@ -20,83 +20,41 @@ const bootSequence = [
   { text: 'Starting network services... [OK]', delay: 800 },
   { text: 'Loading developer profile... [OK]', delay: 1000 },
   { text: '', delay: 1200 },
-];
+] as const;
 
-const commands = [
+const COMMANDS = [
   { cmd: 'whoami', output: 'prateek-kumar-mohanty' },
   { cmd: 'cat title.txt', output: 'Full Stack Developer | 4+ Years Experience' },
   { cmd: 'cat status.txt', output: '> Available for opportunities' },
-];
+] as const;
 
-const stats = [
+const STATS = [
   { label: 'API_OPTIMIZATION', value: '98.5%', color: 'text-terminal-green' },
   { label: 'RESPONSE_TIME', value: '20s → 300ms', color: 'text-terminal-cyan' },
   { label: 'APPS_PUBLISHED', value: '2', color: 'text-terminal-amber' },
   { label: 'MICROSERVICES', value: '3', color: 'text-terminal-purple' },
-];
+] as const;
 
-export function Hero() {
-  const [bootComplete, setBootComplete] = useState(false);
-  const [visibleLines, setVisibleLines] = useState<number>(0);
-  const [showCommands, setShowCommands] = useState(false);
-  const [currentCommand, setCurrentCommand] = useState(0);
-  const [typingCommand, setTypingCommand] = useState('');
-  const [showOutput, setShowOutput] = useState<boolean[]>([false, false, false]);
-
-  useEffect(() => {
-    // Boot sequence
-    const bootTimer = setInterval(() => {
-      setVisibleLines((prev) => {
-        if (prev >= bootSequence.length) {
-          clearInterval(bootTimer);
-          setTimeout(() => {
-            setBootComplete(true);
-            setShowCommands(true);
-          }, 500);
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 300);
-
-    return () => clearInterval(bootTimer);
-  }, []);
-
-  useEffect(() => {
-    if (!showCommands || currentCommand >= commands.length) return;
-
-    const cmd = commands[currentCommand].cmd;
-    let charIndex = 0;
-
-    const typeTimer = setInterval(() => {
-      if (charIndex <= cmd.length) {
-        setTypingCommand(cmd.slice(0, charIndex));
-        charIndex++;
-      } else {
-        clearInterval(typeTimer);
-        setTimeout(() => {
-          setShowOutput((prev) => {
-            const newOutput = [...prev];
-            newOutput[currentCommand] = true;
-            return newOutput;
-          });
-          setTimeout(() => {
-            setCurrentCommand((prev) => prev + 1);
-            setTypingCommand('');
-          }, 500);
-        }, 200);
-      }
-    }, 50);
-
-    return () => clearInterval(typeTimer);
-  }, [showCommands, currentCommand]);
+export function Hero(): React.JSX.Element {
+  const {
+    bootComplete,
+    visibleLines,
+    showCommands,
+    currentCommand,
+    typingCommand,
+    showOutput,
+  } = useBootSequence({
+    bootSequenceLength: BOOT_SEQUENCE.length,
+    commands: [...COMMANDS],
+  });
 
   return (
     <section
       id="hero"
       className="relative min-h-screen flex items-center justify-center py-24 px-4 grid-bg overflow-hidden"
+      aria-label="Hero section with terminal-style introduction"
     >
-      <div className="pointer-events-none absolute inset-0 opacity-40">
+      <div className="pointer-events-none absolute inset-0 opacity-40" aria-hidden="true">
         <div className="absolute left-0 top-10 h-72 w-72 rounded-full bg-terminal-green/20 blur-[120px]" />
         <div className="absolute right-10 bottom-10 h-80 w-80 rounded-full bg-terminal-pink/20 blur-[140px]" />
       </div>
@@ -108,9 +66,11 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="terminal-window glow-ring"
+          role="region"
+          aria-label="Terminal emulator displaying developer information"
         >
           {/* Terminal Header */}
-          <div className="terminal-header">
+          <div className="terminal-header" aria-hidden="true">
             <div className="terminal-btn terminal-btn-close" />
             <div className="terminal-btn terminal-btn-minimize" />
             <div className="terminal-btn terminal-btn-maximize" />
@@ -125,14 +85,16 @@ export function Hero() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="text-terminal-green text-[8px] sm:text-xs md:text-sm mb-6 overflow-x-auto text-glow whitespace-pre"
+                aria-label="ASCII art displaying the name PRATEEK"
+                role="img"
               >
                 {ASCII_ART}
               </motion.pre>
             )}
 
             {/* Boot Sequence */}
-            <div className="space-y-1 mb-6">
-              {bootSequence.slice(0, visibleLines).map((line, index) => (
+            <div className="space-y-1 mb-6" aria-live="polite" aria-atomic="false">
+              {BOOT_SEQUENCE.slice(0, visibleLines).map((line, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -10 }}
@@ -157,8 +119,8 @@ export function Hero() {
 
             {/* Commands */}
             {showCommands && (
-              <div className="space-y-4">
-                {commands.map((command, index) => (
+              <div className="space-y-4" aria-live="polite">
+                {COMMANDS.map((command, index) => (
                   <div key={index}>
                     {/* Command line */}
                     {(index < currentCommand || index === currentCommand) && (
@@ -170,7 +132,7 @@ export function Hero() {
                         <span className="text-foreground ml-2">
                           {index === currentCommand ? typingCommand : command.cmd}
                           {index === currentCommand && (
-                            <span className="cursor" />
+                            <span className="cursor" aria-hidden="true" />
                           )}
                         </span>
                       </div>
@@ -195,7 +157,7 @@ export function Hero() {
                 ))}
 
                 {/* Final prompt with cursor */}
-                {currentCommand >= commands.length && (
+                {currentCommand >= COMMANDS.length && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -205,7 +167,7 @@ export function Hero() {
                     <span className="text-foreground-muted">:</span>
                     <span className="text-terminal-blue">~</span>
                     <span className="text-foreground-muted">$</span>
-                    <span className="cursor" />
+                    <span className="cursor" aria-hidden="true" />
                   </motion.div>
                 )}
               </div>
@@ -220,14 +182,17 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2, duration: 0.5 }}
             className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4"
+            role="list"
+            aria-label="Key metrics and achievements"
           >
-            {stats.map((stat, index) => (
+            {STATS.map((stat, index) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 2.2 + index * 0.1 }}
                 className="glass-panel p-4 glow-ring"
+                role="listitem"
               >
                 <div className="text-foreground-muted text-[11px] tracking-wide mb-1">
                   {stat.label}
@@ -247,6 +212,8 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.5, duration: 0.5 }}
             className="mt-10 flex flex-wrap gap-4 justify-center"
+            role="navigation"
+            aria-label="Quick actions"
           >
             <a
               href="#projects"
@@ -265,6 +232,7 @@ export function Hero() {
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 rounded-lg border border-terminal-amber/60 bg-terminal-amber/10 text-terminal-amber hover:bg-terminal-amber hover:text-background transition-all duration-300 font-mono text-sm hover-glow glow-ring"
+              aria-label="Open GitHub profile in new tab"
             >
               $ open github
             </a>
@@ -272,6 +240,7 @@ export function Hero() {
               href="/pdf/Prateek%20Kumar%20Mohanty.pdf"
               download="Prateek_Kumar_Mohanty_Resume.pdf"
               className="px-6 py-3 rounded-lg border border-terminal-purple/60 bg-terminal-purple/10 text-terminal-purple hover:bg-terminal-purple hover:text-background transition-all duration-300 font-mono text-sm hover-glow glow-ring"
+              aria-label="Download resume as PDF"
             >
               $ wget resume.pdf
             </a>
@@ -285,6 +254,7 @@ export function Hero() {
             animate={{ opacity: 1 }}
             transition={{ delay: 3, duration: 0.5 }}
             className="mt-16 text-center"
+            aria-hidden="true"
           >
             <div className="text-foreground-muted text-xs mb-2">
               {'// scroll to explore'}

@@ -117,7 +117,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             </a>
           ) : null}
           {!project.liveUrl && !project.githubUrl && (
-            <span className="text-foreground-muted italic">// private repo</span>
+            <span className="text-foreground-muted italic">{'// private repo'}</span>
           )}
         </div>
       </div>
