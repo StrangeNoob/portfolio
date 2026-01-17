@@ -139,8 +139,12 @@ export function Projects() {
     <section
       id="projects"
       ref={ref}
-      className="relative py-24 md:py-32 px-4 grid-bg"
+      className="relative py-24 md:py-32 px-4 grid-bg overflow-hidden"
     >
+      <div className="pointer-events-none absolute inset-0 opacity-30">
+        <div className="absolute left-0 top-24 h-72 w-72 rounded-full bg-terminal-blue/18 blur-[130px]" />
+        <div className="absolute right-10 bottom-10 h-80 w-80 rounded-full bg-terminal-amber/14 blur-[150px]" />
+      </div>
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -163,7 +167,7 @@ export function Projects() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mb-8"
         >
-          <div className="terminal-window inline-block">
+          <div className="terminal-window inline-block glow-ring">
             <div className="terminal-header">
               <div className="terminal-btn terminal-btn-close" />
               <div className="terminal-btn terminal-btn-minimize" />
@@ -176,9 +180,9 @@ export function Projects() {
                   key={filter.value}
                   onClick={() => setActiveFilter(filter.value)}
                   className={`px-3 py-1.5 text-xs font-mono border rounded transition-all ${activeFilter === filter.value
-                      ? 'bg-terminal-green/20 border-terminal-green text-terminal-green text-glow'
-                      : 'border-border text-foreground-muted hover:border-terminal-green hover:text-terminal-green'
-                    }`}
+                    ? 'bg-terminal-green/20 border-terminal-green text-terminal-green text-glow'
+                    : 'border-border text-foreground-muted hover:border-terminal-green hover:text-terminal-green'
+                  }`}
                 >
                   {filter.cmd}
                 </button>

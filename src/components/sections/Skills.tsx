@@ -155,8 +155,12 @@ export function Skills() {
     <section
       id="skills"
       ref={ref}
-      className="relative py-24 md:py-32 px-4 grid-bg"
+      className="relative py-24 md:py-32 px-4 grid-bg overflow-hidden"
     >
+      <div className="pointer-events-none absolute inset-0 opacity-35">
+        <div className="absolute left-6 top-8 h-64 w-64 rounded-full bg-terminal-yellow/14 blur-[140px]" />
+        <div className="absolute right-0 bottom-0 h-72 w-72 rounded-full bg-terminal-cyan/16 blur-[150px]" />
+      </div>
       <div className="max-w-5xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -177,7 +181,7 @@ export function Skills() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="terminal-window"
+          className="terminal-window glow-ring"
         >
           <div className="terminal-header">
             <div className="terminal-btn terminal-btn-close" />

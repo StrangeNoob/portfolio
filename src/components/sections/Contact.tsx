@@ -74,8 +74,12 @@ export function Contact() {
     <section
       id="contact"
       ref={ref}
-      className="relative py-24 md:py-32 px-4 grid-bg"
+      className="relative py-24 md:py-32 px-4 grid-bg overflow-hidden"
     >
+      <div className="pointer-events-none absolute inset-0 opacity-30">
+        <div className="absolute left-0 top-10 h-72 w-72 rounded-full bg-terminal-pink/15 blur-[140px]" />
+        <div className="absolute right-6 bottom-0 h-80 w-80 rounded-full bg-terminal-green/16 blur-[150px]" />
+      </div>
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -99,7 +103,7 @@ export function Contact() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             {/* Contact Info */}
-            <div className="terminal-window mb-6">
+            <div className="terminal-window mb-6 glow-ring">
               <div className="terminal-header">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
@@ -134,7 +138,7 @@ export function Contact() {
             </div>
 
             {/* Social Links */}
-            <div className="terminal-window">
+            <div className="terminal-window glow-ring">
               <div className="terminal-header">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
@@ -172,7 +176,7 @@ export function Contact() {
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <div className="terminal-window">
+            <div className="terminal-window glow-ring">
               <div className="terminal-header">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />

@@ -56,8 +56,12 @@ export function About() {
     <section
       id="about"
       ref={ref}
-      className="relative py-24 md:py-32 px-4 grid-bg"
+      className="relative py-24 md:py-32 px-4 grid-bg overflow-hidden"
     >
+      <div className="pointer-events-none absolute inset-0 opacity-40">
+        <div className="absolute -left-10 top-10 h-56 w-56 rounded-full bg-terminal-cyan/15 blur-[120px]" />
+        <div className="absolute right-0 bottom-0 h-72 w-72 rounded-full bg-terminal-green/15 blur-[140px]" />
+      </div>
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -73,7 +77,7 @@ export function About() {
           </div>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-8 relative">
           {/* Left Column - System Info */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -81,7 +85,7 @@ export function About() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             {/* Neofetch-style info */}
-            <div className="terminal-window mb-6">
+            <div className="terminal-window mb-6 glow-ring">
               <div className="terminal-header">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
@@ -141,7 +145,7 @@ export function About() {
             </div>
 
             {/* Skills */}
-            <div className="terminal-window">
+            <div className="terminal-window glow-ring">
               <div className="terminal-header">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
@@ -179,7 +183,7 @@ export function About() {
             className="space-y-6"
           >
             {/* Bio Terminal */}
-            <div className="terminal-window">
+            <div className="terminal-window glow-ring">
               <div className="terminal-header">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
@@ -208,7 +212,7 @@ export function About() {
             </div>
 
             {/* Metrics */}
-            <div className="terminal-window">
+            <div className="terminal-window glow-ring">
               <div className="terminal-header">
                 <div className="terminal-btn terminal-btn-close" />
                 <div className="terminal-btn terminal-btn-minimize" />
@@ -219,7 +223,7 @@ export function About() {
                 <div className="text-xs text-foreground-muted mb-3">
                   $ metrics --format=table
                 </div>
-                <div className="border border-border rounded overflow-hidden">
+                <div className="border border-border rounded overflow-hidden bg-surface/40">
                   <div className="grid grid-cols-2 text-xs">
                     {metrics.map((metric, index) => (
                       <motion.div
