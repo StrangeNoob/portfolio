@@ -104,8 +104,8 @@ export function Experience() {
                       <div className="text-foreground-muted mb-2">
                         # Changes in this role:
                       </div>
-                      {exp.achievements.map((achievement, i) => (
-                        <div key={i} className="flex gap-2">
+                      {exp.achievements.map((achievement) => (
+                        <div key={`${exp.id}-${achievement}`} className="flex gap-2">
                           <span className="text-terminal-green">+</span>
                           <span className="text-terminal-green">{achievement}</span>
                         </div>
@@ -148,5 +148,3 @@ export function Experience() {
     </section>
   );
 }
-
-export default Experience;
