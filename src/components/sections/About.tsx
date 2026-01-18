@@ -189,7 +189,7 @@ export function About() {
               <div className="terminal-body text-sm space-y-0.5 max-h-80 overflow-y-auto">
                 {bioLines.map((line, index) => (
                   <motion.div
-                    key={index}
+                    key={`bio-${index}-${line.slice(0, 20)}`}
                     initial={{ opacity: 0 }}
                     animate={isInView ? { opacity: 1 } : {}}
                     transition={{ duration: 0.1, delay: 0.5 + index * 0.03 }}
@@ -247,5 +247,3 @@ export function About() {
     </section>
   );
 }
-
-export default About;

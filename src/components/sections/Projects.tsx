@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo, memo } from 'react';
 import { projects, type Project } from '@/data/resume';
 
 type FilterCategory = 'all' | 'frontend' | 'backend' | 'mobile' | 'ai' | 'fullstack' | 'web';
@@ -23,7 +23,7 @@ const categoryColors: Record<string, string> = {
   web: 'text-terminal-blue',
 };
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+const ProjectCard = memo(function ProjectCard({ project, index }: { project: Project; index: number }) {
   const color = categoryColors[project.category] || 'text-terminal-green';
 
   return (
@@ -35,10 +35,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       transition={{ duration: 0.3, delay: index * 0.05 }}
       className="terminal-window group"
     >
-      <div className="terminal-header">
-        <div className="terminal-btn terminal-btn-close" />
-        <div className="terminal-btn terminal-btn-minimize" />
-        <div className="terminal-btn terminal-btn-maximize" />
+      <div className="terminal-header" role="presentation">
+        <div className="terminal-btn terminal-btn-close" aria-hidden="true" />
+        <div className="terminal-btn terminal-btn-minimize" aria-hidden="true" />
+        <div className="terminal-btn terminal-btn-maximize" aria-hidden="true" />
         <span className="terminal-title">{project.title.toLowerCase().replace(/\s/g, '_')}.md</span>
       </div>
       <div className="terminal-body text-sm">
@@ -48,7 +48,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             [{project.category}]
           </span>
           {project.featured && (
-            <span className="text-xs text-terminal-amber">★ featured</span>
+            <span className="text-xs text-terminal-amber" aria-label="Featured project">★ featured</span>
           )}
         </div>
 
@@ -67,9 +67,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           <div className="mb-4">
             <div className="text-xs text-foreground-muted mb-2"># Metrics:</div>
             <div className="flex flex-wrap gap-2">
-              {project.metrics.map((metric, i) => (
+              {project.metrics.map((metric) => (
                 <span
-                  key={i}
+                  key={`${project.id}-metric-${metric}`}
                   className="text-xs px-2 py-1 bg-terminal-green/10 border border-terminal-green/30 text-terminal-green rounded"
                 >
                   {metric}
@@ -85,7 +85,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           <div className="flex flex-wrap gap-1">
             {project.technologies.map((tech) => (
               <span
-                key={tech}
+                key={`${project.id}-tech-${tech}`}
                 className="text-xs px-2 py-0.5 bg-surface border border-border rounded text-foreground-muted"
               >
                 {tech}
@@ -102,6 +102,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               target="_blank"
               rel="noopener noreferrer"
               className="text-terminal-cyan hover:text-glow hover:underline"
+              aria-label={`View ${project.title} live demo`}
             >
               $ open --live
             </a>
@@ -112,6 +113,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               target="_blank"
               rel="noopener noreferrer"
               className="text-terminal-cyan hover:text-glow hover:underline"
+              aria-label={`View ${project.title} source code on GitHub`}
             >
               $ git clone
             </a>
@@ -123,17 +125,19 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       </div>
     </motion.div>
   );
-}
+});
 
 export function Projects() {
   const [activeFilter, setActiveFilter] = useState<FilterCategory>('all');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
-  const filteredProjects = projects.filter((project) => {
-    if (activeFilter === 'all') return true;
-    return project.category === activeFilter;
-  });
+  const filteredProjects = useMemo(() => {
+    return projects.filter((project) => {
+      if (activeFilter === 'all') return true;
+      return project.category === activeFilter;
+    });
+  }, [activeFilter]);
 
   return (
     <section
@@ -152,7 +156,7 @@ export function Projects() {
           <div className="flex items-center gap-2 text-terminal-green mb-2">
             <span>$</span>
             <span>ls ./projects</span>
-            <span className="cursor" />
+            <span className="cursor" aria-hidden="true" />
           </div>
         </motion.div>
 
@@ -164,17 +168,20 @@ export function Projects() {
           className="mb-8"
         >
           <div className="terminal-window inline-block">
-            <div className="terminal-header">
-              <div className="terminal-btn terminal-btn-close" />
-              <div className="terminal-btn terminal-btn-minimize" />
-              <div className="terminal-btn terminal-btn-maximize" />
+            <div className="terminal-header" role="presentation">
+              <div className="terminal-btn terminal-btn-close" aria-hidden="true" />
+              <div className="terminal-btn terminal-btn-minimize" aria-hidden="true" />
+              <div className="terminal-btn terminal-btn-maximize" aria-hidden="true" />
               <span className="terminal-title">filter</span>
             </div>
-            <div className="p-3 flex flex-wrap gap-2">
+            <div className="p-3 flex flex-wrap gap-2" role="tablist" aria-label="Project category filters">
               {filters.map((filter) => (
                 <button
                   key={filter.value}
                   onClick={() => setActiveFilter(filter.value)}
+                  role="tab"
+                  aria-selected={activeFilter === filter.value}
+                  aria-controls="projects-grid"
                   className={`px-3 py-1.5 text-xs font-mono border rounded transition-all ${activeFilter === filter.value
                       ? 'bg-terminal-green/20 border-terminal-green text-terminal-green text-glow'
                       : 'border-border text-foreground-muted hover:border-terminal-green hover:text-terminal-green'
@@ -189,8 +196,11 @@ export function Projects() {
 
         {/* Projects Grid */}
         <motion.div
+          id="projects-grid"
           layout
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          role="tabpanel"
+          aria-label={`Projects filtered by ${activeFilter}`}
         >
           <AnimatePresence mode="popLayout">
             {filteredProjects.map((project, index) => (
@@ -207,6 +217,7 @@ export function Projects() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="text-center py-12 text-foreground-muted"
+              role="status"
             >
               <div className="font-mono">
                 <span className="text-terminal-amber">!</span> No projects found matching filter
@@ -227,6 +238,7 @@ export function Projects() {
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-foreground-muted hover:text-terminal-green transition-colors font-mono"
+            aria-label="View all projects on GitHub"
           >
             $ open https://github.com/StrangeNoob
           </a>
@@ -235,5 +247,3 @@ export function Projects() {
     </section>
   );
 }
-
-export default Projects;

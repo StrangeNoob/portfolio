@@ -2,9 +2,19 @@ import { Resend } from 'resend';
 import { NextRequest, NextResponse } from 'next/server';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+const CONTACT_EMAIL = process.env.CONTACT_EMAIL;
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate environment configuration
+    if (!CONTACT_EMAIL) {
+      console.error('CONTACT_EMAIL environment variable is not set');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
+
     const { name, email, message } = await request.json();
 
     // Validate input
@@ -27,7 +37,7 @@ export async function POST(request: NextRequest) {
     // Send email via Resend
     const { data, error } = await resend.emails.send({
       from: 'Portfolio Contact <onboarding@resend.dev>',
-      to: ['itsprateekmohanty@gmail.com'],
+      to: [CONTACT_EMAIL],
       replyTo: email,
       subject: `Portfolio Contact: Message from ${name}`,
       html: `
