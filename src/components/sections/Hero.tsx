@@ -68,12 +68,14 @@ export function Hero() {
     const cmd = commands[currentCommand].cmd;
     let charIndex = 0;
 
-    const typeTimer = setInterval(() => {
+    let typeTimer: NodeJS.Timeout;
+
+    const typeChar = () => {
       if (charIndex <= cmd.length) {
         setTypingCommand(cmd.slice(0, charIndex));
         charIndex++;
+        typeTimer = setTimeout(typeChar, Math.random() * 50 + 30);
       } else {
-        clearInterval(typeTimer);
         setTimeout(() => {
           setShowOutput((prev) => {
             const newOutput = [...prev];
@@ -86,20 +88,25 @@ export function Hero() {
           }, 500);
         }, 200);
       }
-    }, 50);
+    };
 
-    return () => clearInterval(typeTimer);
+    typeTimer = setTimeout(typeChar, 30);
+
+    return () => clearTimeout(typeTimer);
   }, [showCommands, currentCommand]);
 
   return (
     <section id="hero" className="min-h-screen flex items-center justify-center py-20 px-4 grid-bg">
-      <div className="w-full max-w-4xl">
+      <div className="w-full max-w-4xl relative z-10">
+        {/* Ambient background glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 bg-terminal-green/5 blur-[100px] rounded-full pointer-events-none animate-pulse-glow" />
+
         {/* Terminal Window */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="terminal-window"
+          className="terminal-window relative backdrop-blur-sm bg-background-terminal/90"
         >
           {/* Terminal Header */}
           <div className="terminal-header">
@@ -244,7 +251,7 @@ export function Hero() {
               href="#projects"
               className="px-6 py-3 bg-terminal-green/10 border border-terminal-green text-terminal-green
                          hover:bg-terminal-green hover:text-background transition-all duration-300
-                         font-mono text-sm hover-glow"
+                         font-mono text-sm hover-glitch"
             >
               $ view_projects
             </a>
@@ -252,7 +259,7 @@ export function Hero() {
               href="#contact"
               className="px-6 py-3 bg-transparent border border-foreground-muted text-foreground-muted
                          hover:border-terminal-cyan hover:text-terminal-cyan transition-all duration-300
-                         font-mono text-sm hover-glow"
+                         font-mono text-sm hover-glitch"
             >
               $ send_message
             </a>
@@ -262,7 +269,7 @@ export function Hero() {
               rel="noopener noreferrer"
               className="px-6 py-3 bg-transparent border border-foreground-muted text-foreground-muted
                          hover:border-terminal-amber hover:text-terminal-amber transition-all duration-300
-                         font-mono text-sm hover-glow"
+                         font-mono text-sm hover-glitch"
             >
               $ open github
             </a>
@@ -271,7 +278,7 @@ export function Hero() {
               download="Prateek_Kumar_Mohanty_Resume.pdf"
               className="px-6 py-3 bg-transparent border border-foreground-muted text-foreground-muted
                          hover:border-terminal-purple hover:text-terminal-purple transition-all duration-300
-                         font-mono text-sm hover-glow"
+                         font-mono text-sm hover-glitch"
             >
               $ wget resume.pdf
             </a>

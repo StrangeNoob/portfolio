@@ -81,6 +81,7 @@
   --animate-scanline: scanline 8s linear infinite;
   --animate-flicker: flicker 0.15s infinite;
   --animate-glow: glow 2s ease-in-out infinite alternate;
+  --animate-pulse-glow: pulse-glow 2.5s ease-in-out infinite;
 }
 
 /* Keyframes */
@@ -102,6 +103,11 @@
 @keyframes typing {
   from { width: 0; }
   to { width: 100%; }
+}
+
+@keyframes scanline-scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100vh; }
 }
 
 @keyframes scanline {
@@ -158,9 +164,25 @@ body::before {
     transparent 1px,
     transparent 2px
   );
+  background-size: 100% 4px;
+  animation: scanline-scroll 10s linear infinite;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.3;
+}
+
+/* CRT Vignette border effect */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.3;
 }
 
 /* Selection styles */
@@ -277,16 +299,39 @@ body::before {
 /* Text glow effect */
 .text-glow {
   text-shadow:
-    0 0 5px currentColor,
-    0 0 10px currentColor;
+    0 0 2px currentColor,
+    0 0 8px currentColor;
 }
 
 .text-glow-strong {
   text-shadow:
     0 0 5px currentColor,
     0 0 10px currentColor,
-    0 0 20px currentColor,
-    0 0 40px currentColor;
+    0 0 20px currentColor;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { text-shadow: 0 0 2px currentColor, 0 0 8px currentColor; opacity: 0.9; }
+  50% { text-shadow: 0 0 4px currentColor, 0 0 12px currentColor, 0 0 20px currentColor; opacity: 1; }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Glitch hover effect */
+@keyframes glitch-skew {
+  0% { transform: skew(0deg); }
+  20% { transform: skew(-2deg); }
+  40% { transform: skew(2deg); }
+  60% { transform: skew(-1deg); }
+  80% { transform: skew(1deg); }
+  100% { transform: skew(0deg); }
+}
+
+.hover-glitch:hover {
+  animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  text-shadow: 2px 0 var(--terminal-cyan), -2px 0 var(--terminal-red);
 }
 
 /* ASCII border box */
