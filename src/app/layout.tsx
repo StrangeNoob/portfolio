@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Space_Grotesk, Plus_Jakarta_Sans, Syne } from 'next/font/google';
 import './globals.css';
+import { JsonLd } from '@/components/seo/JsonLd';
 
 const spaceGrotesk = Space_Grotesk({
   variable: '--font-display',
@@ -79,6 +80,7 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${plusJakarta.variable} ${syne.variable} antialiased bg-background text-foreground`}
       >
+        <JsonLd />
         {children}
       </body>
     </html>
