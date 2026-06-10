@@ -7,6 +7,7 @@ import {
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
 } from "react";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { personalInfo } from "@/data/resume";
@@ -160,6 +161,33 @@ export function Hero() {
           style={{ ...depth(-14, -10, 30), color: "var(--accent-ink)" }}
         >
           +
+        </div>
+
+        {/* signature rook — its own depth plane balancing the type block.
+            The grounded ellipse stays put while the sprite bobs above it;
+            pointer drift reuses the same CSS-variable rig as the shapes. */}
+        <div
+          aria-hidden="true"
+          className={cn(
+            styles.decoDrift,
+            "absolute top-[42%] right-[3%] hidden sm:block lg:top-[26%] lg:right-[5%]"
+          )}
+          style={depth(-30, -22, 60)}
+        >
+          <div className={styles.rookShadow} />
+          <Image
+            src="/designs/rook-cream.png"
+            alt=""
+            width={696}
+            height={900}
+            priority
+            sizes="(min-width: 1280px) 209px, (min-width: 1024px) 186px, 140px"
+            className={cn(
+              styles.float,
+              styles.rookImg,
+              "h-[180px] w-auto select-none lg:h-[240px] xl:h-[270px]"
+            )}
+          />
         </div>
 
         {/* kicker — outer div owns the CSS depth, inner motion owns entrance */}

@@ -1,9 +1,9 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import { Suspense, useRef } from "react";
 import type { Group } from "three";
-import BrutalistTower from "./BrutalistTowerModel";
+import RookModel from "./RookModel";
 
 function Turntable({ animate }: { animate: boolean }) {
   const group = useRef<Group>(null);
@@ -17,7 +17,7 @@ function Turntable({ animate }: { animate: boolean }) {
 
   return (
     <group ref={group} rotation={[0, 0.45, 0]}>
-      <BrutalistTower />
+      <RookModel />
     </group>
   );
 }
@@ -27,12 +27,13 @@ export default function MonolithScene({ animate }: { animate: boolean }) {
     <Canvas
       dpr={[1, 2]}
       shadows
-      camera={{ position: [8, 3.6, 11], fov: 33 }}
+      camera={{ position: [7.5, 3.0, 10.5], fov: 32 }}
       gl={{ antialias: true }}
-      onCreated={({ camera }) => camera.lookAt(0, 1.3, 0)}
+      onCreated={({ camera }) => camera.lookAt(0, 0.7, 0)}
       style={{ width: "100%", height: "100%" }}
     >
-      {/* Harsh single key light. Hard shadows raking the facades are the show. */}
+      {/* Harsh single key light. Raking shadows across the window slots
+          and crenellations are the show. */}
       <directionalLight
         position={[7, 10, 5]}
         intensity={2.4}
@@ -48,7 +49,9 @@ export default function MonolithScene({ animate }: { animate: boolean }) {
       {/* One violent accent: a signal-red rim from the left. */}
       <pointLight position={[-8, 2, -4]} intensity={16} color="#ff2b00" />
 
-      <Turntable animate={animate} />
+      <Suspense fallback={null}>
+        <Turntable animate={animate} />
+      </Suspense>
 
       {/* Ground slab — catches the hard shadow. */}
       <mesh

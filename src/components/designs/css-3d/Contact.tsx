@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { personalInfo, socialLinks } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import styles from "./styles.module.css";
 import { SectionHeading } from "./SectionHeading";
 import { Reveal } from "./Reveal";
+import { ParallaxY } from "./Parallax";
 
 type FormStatus = "idle" | "sending" | "sent" | "error";
 
@@ -43,8 +45,28 @@ export function Contact() {
     <section
       id="contact"
       aria-label="Contact"
-      className="px-6 py-24 sm:px-10 sm:py-32 lg:px-16"
+      className="relative overflow-hidden px-6 py-24 sm:px-10 sm:py-32 lg:px-16"
     >
+      {/* signature rook reprise — small, tilted, drifting at its own
+          scroll speed in the section's bottom padding zone */}
+      <ParallaxY
+        from={44}
+        to={-28}
+        className="absolute right-[6%] bottom-1 -z-10 hidden lg:block"
+      >
+        <Image
+          src="/designs/rook-cream.png"
+          alt=""
+          width={696}
+          height={900}
+          sizes="87px"
+          className={cn(
+            styles.rookImg,
+            "h-[112px] w-auto rotate-6 opacity-90 select-none"
+          )}
+        />
+      </ParallaxY>
+
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           number="05"

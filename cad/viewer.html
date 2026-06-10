@@ -11,7 +11,7 @@
 <body>
   <model-viewer
     id="mv"
-    src="crt_terminal.glb"
+    src=""
     camera-orbit="35deg 70deg 110%"
     exposure="1.1"
     shadow-intensity="0.6"
@@ -19,6 +19,10 @@
   ></model-viewer>
   <script>
     const mv = document.getElementById('mv');
+    const params = new URLSearchParams(location.search);
+    mv.src = params.get('src') || 'crt_terminal.glb';
+    if (params.get('orbit')) mv.cameraOrbit = params.get('orbit');
+    if (params.get('bg')) document.body.style.background = params.get('bg');
     mv.addEventListener('load', () => { document.title = 'LOADED'; });
     mv.addEventListener('error', (e) => { document.title = 'ERROR'; console.error(e); });
   </script>
