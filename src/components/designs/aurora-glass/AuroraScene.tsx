@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import PlanetModel from "./PlanetModel";
 
 /* ------------------------------------------------------------------ */
 /* GLSL                                                                */
@@ -214,7 +215,7 @@ function AuroraPlane({ frozen }: { frozen: boolean }) {
   });
 
   return (
-    <mesh scale={[viewport.width, viewport.height, 1]} renderOrder={0}>
+    <mesh scale={[viewport.width, viewport.height, 1]} renderOrder={-1}>
       <planeGeometry args={[1, 1]} />
       <shaderMaterial
         ref={materialRef}
@@ -273,7 +274,6 @@ function Starfield({ frozen }: { frozen: boolean }) {
         uniforms={STAR_UNIFORMS}
         transparent
         depthWrite={false}
-        depthTest={false}
         blending={THREE.AdditiveBlending}
       />
     </points>
@@ -305,6 +305,7 @@ export default function AuroraScene({
       <color attach="background" args={["#070510"]} />
       <AuroraPlane frozen={frozen} />
       <Starfield frozen={frozen} />
+      <PlanetModel frozen={frozen} />
     </Canvas>
   );
 }

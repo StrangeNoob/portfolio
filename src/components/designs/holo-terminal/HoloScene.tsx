@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import * as THREE from 'three';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
+import { CrtComputerModel } from './CrtComputerModel';
 
 const GREEN = '#39ff14';
 const CYAN = '#00ffff';
@@ -106,159 +107,6 @@ function WireOctahedron({ reduced }: { reduced: boolean }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Floating holographic terminal screen                                */
-/* ------------------------------------------------------------------ */
-
-const SCREEN_LINES: ReadonlyArray<readonly [string, string]> = [
-  ['guest@prateek:~$ whoami', '#39ff14'],
-  ['Prateek Kumar Mohanty :: Full Stack Dev', '#c8ffb6'],
-  ['', '#000000'],
-  ['guest@prateek:~$ uptime', '#39ff14'],
-  ['4+ years // web . mobile . ai-systems', '#c8ffb6'],
-  ['', '#000000'],
-  ['guest@prateek:~$ ./optimize --api', '#39ff14'],
-  ['20s -> 300ms  [97% faster]  OK', '#00ffff'],
-  ['', '#000000'],
-  ['guest@prateek:~$ run rag-hotel-search', '#39ff14'],
-  ['1.2K+ hotels indexed in <10s', '#ffb000'],
-  ['natural-language search :: ONLINE _', '#c8ffb6'],
-];
-
-function createScreenTexture(): THREE.CanvasTexture {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 640;
-  const ctx = canvas.getContext('2d');
-  if (ctx) {
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, '#04150c');
-    gradient.addColorStop(1, '#020a06');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.font = '500 30px "JetBrains Mono", "Courier New", monospace';
-    ctx.textBaseline = 'top';
-    let y = 42;
-    for (const [text, color] of SCREEN_LINES) {
-      if (text) {
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 14;
-        ctx.fillStyle = color;
-        ctx.fillText(text, 52, y);
-      }
-      y += 46;
-    }
-
-    // baked-in scanlines
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
-    for (let sy = 0; sy < canvas.height; sy += 4) {
-      ctx.fillRect(0, sy, canvas.width, 2);
-    }
-  }
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = 4;
-  return texture;
-}
-
-function HoloScreen({ reduced }: { reduced: boolean }) {
-  const group = useRef<THREE.Group>(null);
-  const screenMat = useRef<THREE.MeshBasicMaterial>(null);
-  const scanBar = useRef<THREE.Mesh>(null);
-  const { viewport } = useThree();
-
-  const texture = useMemo(() => createScreenTexture(), []);
-  const frameGeometry = useMemo(
-    () => new THREE.EdgesGeometry(new THREE.PlaneGeometry(3.74, 2.46)),
-    [],
-  );
-
-  useFrame((state) => {
-    if (reduced || !group.current) return;
-    const t = state.clock.elapsedTime;
-
-    // tilt/parallax toward the cursor
-    group.current.rotation.y = THREE.MathUtils.lerp(
-      group.current.rotation.y,
-      state.pointer.x * 0.38,
-      0.06,
-    );
-    group.current.rotation.x = THREE.MathUtils.lerp(
-      group.current.rotation.x,
-      -state.pointer.y * 0.26,
-      0.06,
-    );
-
-    // holographic flicker (emissive-style opacity pulsing)
-    if (screenMat.current) {
-      const flicker =
-        0.9 +
-        Math.sin(t * 9.3) * 0.035 +
-        Math.sin(t * 27.1) * 0.025 +
-        (Math.random() < 0.015 ? -0.22 : 0);
-      screenMat.current.opacity = THREE.MathUtils.clamp(flicker, 0.55, 1);
-    }
-
-    // scan highlight sweeping down the screen
-    if (scanBar.current) {
-      scanBar.current.position.y = 1.1 - ((t * 0.55) % 2.3);
-    }
-  });
-
-  // pull the screen to center on narrow viewports so it stays visible
-  const x = viewport.width < 7 ? 0 : 1.45;
-
-  return (
-    <group ref={group} position={[x, 0.35, 0]}>
-      {/* soft glow backdrop */}
-      <mesh position={[0, 0, -0.08]}>
-        <planeGeometry args={[4.4, 3]} />
-        <meshBasicMaterial
-          color={GREEN}
-          transparent
-          opacity={0.05}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          toneMapped={false}
-        />
-      </mesh>
-
-      {/* terminal screen */}
-      <mesh>
-        <planeGeometry args={[3.64, 2.36]} />
-        <meshBasicMaterial
-          ref={screenMat}
-          map={texture}
-          transparent
-          opacity={0.92}
-          side={THREE.DoubleSide}
-          toneMapped={false}
-        />
-      </mesh>
-
-      {/* scan highlight */}
-      <mesh ref={scanBar} position={[0, 0.6, 0.012]}>
-        <planeGeometry args={[3.64, 0.09]} />
-        <meshBasicMaterial
-          color={GREEN}
-          transparent
-          opacity={0.16}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          toneMapped={false}
-        />
-      </mesh>
-
-      {/* glowing frame */}
-      <lineSegments geometry={frameGeometry}>
-        <lineBasicMaterial color={GREEN} transparent opacity={0.8} toneMapped={false} />
-      </lineSegments>
-    </group>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /* Scene                                                               */
 /* ------------------------------------------------------------------ */
 
@@ -268,6 +116,14 @@ function SceneContents({ reduced }: { reduced: boolean }) {
       <color attach="background" args={[BG]} />
       <fog attach="fog" args={[BG, 7, 21]} />
 
+      {/* lighting for the standard-material CRT model */}
+      <ambientLight intensity={0.45} color="#86b890" />
+      <directionalLight position={[3, 4, 5]} intensity={1.2} color="#cfe8d2" />
+      {/* phosphor rim light from behind-left */}
+      <pointLight position={[-4, 2, -3]} intensity={26} color={GREEN} distance={14} decay={2} />
+      {/* screen spill onto the keyboard/desk */}
+      <pointLight position={[1.6, -0.1, 1.9]} intensity={5} color={GREEN} distance={6} decay={2} />
+
       <ParticleField reduced={reduced} />
       <WireIcosahedron reduced={reduced} />
       <WireOctahedron reduced={reduced} />
@@ -276,10 +132,10 @@ function SceneContents({ reduced }: { reduced: boolean }) {
       <gridHelper args={[46, 46, '#1f8f2f', '#0a2c12']} position={[0, -2.5, 0]} />
 
       {reduced ? (
-        <HoloScreen reduced />
+        <CrtComputerModel reduced />
       ) : (
-        <Float speed={1.6} rotationIntensity={0.12} floatIntensity={0.5}>
-          <HoloScreen reduced={false} />
+        <Float speed={1.2} rotationIntensity={0.08} floatIntensity={0.35}>
+          <CrtComputerModel reduced={false} />
         </Float>
       )}
     </>
