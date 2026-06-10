@@ -10,7 +10,9 @@ const FACTS = [
   {
     icon: Terminal,
     label: 'current_role',
-    value: `${experiences[0].role} @ ${experiences[0].company}`,
+    value: experiences[0]
+      ? `${experiences[0].role} @ ${experiences[0].company}`
+      : 'open to opportunities',
   },
   { icon: Cpu, label: 'experience', value: `${personalInfo.yearsOfExperience}+ years` },
   { icon: MapPin, label: 'location', value: personalInfo.location },
@@ -37,8 +39,8 @@ export function About() {
           >
             {'// human-readable output'}
           </p>
-          {paragraphs.map((paragraph) => (
-            <p key={paragraph.slice(0, 24)} className="mb-4 text-[#c5dcc9] last:mb-0">
+          {paragraphs.map((paragraph, i) => (
+            <p key={i} className="mb-4 text-[#c5dcc9] last:mb-0">
               {paragraph}
             </p>
           ))}

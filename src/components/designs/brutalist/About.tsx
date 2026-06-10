@@ -57,9 +57,14 @@ export default function About() {
           ))}
 
           <p className="mt-10 max-w-2xl border-l-4 border-[#0c0c0c] pl-4 text-sm leading-relaxed">
-            BASED IN {personalInfo.location.toUpperCase()}. CURRENTLY{" "}
-            {experiences[0].role.toUpperCase()} AT{" "}
-            {experiences[0].company.toUpperCase()}. REACHABLE AT{" "}
+            BASED IN {personalInfo.location.toUpperCase()}.{" "}
+            {experiences[0] && (
+              <>
+                CURRENTLY {experiences[0].role.toUpperCase()} AT{" "}
+                {experiences[0].company.toUpperCase()}.{" "}
+              </>
+            )}
+            REACHABLE AT{" "}
             <a
               href={`mailto:${personalInfo.email}`}
               className="font-bold underline underline-offset-4 hover:bg-[#0c0c0c] hover:text-[#f4f4f0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff2b00]"

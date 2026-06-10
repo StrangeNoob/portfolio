@@ -29,7 +29,8 @@ export function Contact() {
       setName('');
       setEmail('');
       setMessage('');
-    } catch {
+    } catch (err) {
+      console.error('Contact form submission failed:', err);
       setStatus('error');
     }
   }

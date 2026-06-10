@@ -74,7 +74,8 @@ export function Projects() {
                 </h3>
 
                 <p className="mt-3" style={{ color: "var(--ink-soft)" }}>
-                  {project.description}.
+                  {project.description}
+                  {!/[.!?]$/.test(project.description) && "."}
                 </p>
 
                 {project.metrics && (

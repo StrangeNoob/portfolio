@@ -62,8 +62,8 @@ export function About() {
 
           <Reveal delay={0.12}>
             <div className="flex flex-col gap-5">
-              {bioParagraphs.map((p) => (
-                <p key={p.slice(0, 24)} style={{ color: "var(--ink-soft)" }}>
+              {bioParagraphs.map((p, i) => (
+                <p key={i} style={{ color: "var(--ink-soft)" }}>
                   {p}
                 </p>
               ))}
