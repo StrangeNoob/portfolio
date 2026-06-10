@@ -14,7 +14,14 @@ import Skills from "./Skills";
 import Contact from "./Contact";
 import Footer from "./Footer";
 
-export default function BrutalistPage() {
+interface BrutalistPageProps {
+  /** show the fixed "← all designs" link (design-exploration routes only) */
+  showDesignsLink?: boolean;
+}
+
+export default function BrutalistPage({
+  showDesignsLink = true,
+}: BrutalistPageProps) {
   return (
     <MotionConfig reducedMotion="user">
       <div
@@ -76,12 +83,14 @@ export default function BrutalistPage() {
 
         <Footer />
 
-        <Link
-          href="/designs"
-          className="fixed bottom-5 left-5 z-50 text-[11px] font-bold uppercase tracking-[0.3em] text-white mix-blend-difference hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-        >
-          ← all designs
-        </Link>
+        {showDesignsLink && (
+          <Link
+            href="/designs"
+            className="fixed bottom-5 left-5 z-50 text-[11px] font-bold uppercase tracking-[0.3em] text-white mix-blend-difference hover:bg-white hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+          >
+            ← all designs
+          </Link>
+        )}
       </div>
     </MotionConfig>
   );
