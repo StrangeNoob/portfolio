@@ -46,3 +46,7 @@ portfolio-copy.md
 .claude/
 .playwright-mcp/
 config.bat
+
+# CAD build outputs (regenerate via cad/*.py; site assets live in public/models)
+cad/*.glb
+cad/preview.png
