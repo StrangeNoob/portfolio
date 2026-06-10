@@ -92,7 +92,8 @@ export default function Hero() {
           </motion.p>
           <a
             href="#about"
-            className="pointer-events-auto border-2 border-[#e8e8e4] px-5 py-3 text-xs font-bold uppercase tracking-[0.3em] hover:bg-[#ff2b00] hover:border-[#ff2b00] hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ff2b00]"
+            // clears the homepage's fixed theme toggle (absent on /designs/*)
+            className="pointer-events-auto border-2 border-[#e8e8e4] px-5 py-3 text-xs font-bold uppercase tracking-[0.3em] hover:bg-[#ff2b00] hover:border-[#ff2b00] hover:text-black focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ff2b00] [body:has(#theme-toggle)_&]:mr-28 max-sm:[body:has(#theme-toggle)_&]:mr-0"
           >
             Descend ↓
           </a>
