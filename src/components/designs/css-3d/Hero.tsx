@@ -4,15 +4,26 @@ import {
   useCallback,
   useEffect,
   useRef,
+  useState,
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { personalInfo } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import styles from "./styles.module.css";
+
+/* The one sanctioned WebGL object of this design, loaded lazily on the
+   client only. While the chunk + GLB load (and permanently for
+   reduced-motion users) the persistent sprite stays the visible
+   fallback, so first paint is identical to the sprite version. */
+const RookScene = dynamic(() => import("./RookScene"), {
+  ssr: false,
+  loading: () => null,
+});
 
 const [first, middle, last] = personalInfo.name.split(" ");
 
@@ -47,6 +58,15 @@ export function Hero() {
   const enabled = useRef(false);
   const reduced = useReducedMotion();
 
+  // WebGL rook lifecycle: mount once the hero is near the viewport,
+  // freeze its frameloop when scrolled away, fade the sprite out only
+  // after the GLB has actually committed.
+  const [heroInView, setHeroInView] = useState(false);
+  const [hasIntersected, setHasIntersected] = useState(false);
+  const [sceneReady, setSceneReady] = useState(false);
+  const handleSceneReady = useCallback(() => setSceneReady(true), []);
+  const showScene = hasIntersected && !reduced;
+
   useEffect(() => {
     const fine = window.matchMedia("(pointer: fine)").matches;
     const noMotion = window.matchMedia(
@@ -56,6 +76,21 @@ export function Hero() {
     return () => {
       if (frame.current !== null) cancelAnimationFrame(frame.current);
     };
+  }, []);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setHeroInView(entry.isIntersecting);
+        if (entry.isIntersecting) setHasIntersected(true);
+      },
+      { rootMargin: "200px 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   const flush = useCallback(() => {
@@ -164,30 +199,40 @@ export function Hero() {
         </div>
 
         {/* signature rook — its own depth plane balancing the type block.
-            The grounded ellipse stays put while the sprite bobs above it;
-            pointer drift reuses the same CSS-variable rig as the shapes. */}
+            The grounded ellipse stays put beneath; pointer drift reuses
+            the same CSS-variable rig as the shapes. Sprite paints first
+            (and stays for reduced motion); the WebGL rook fades in over
+            it once the GLB is committed, then owns idle bob + scroll yaw. */}
         <div
           aria-hidden="true"
           className={cn(
             styles.decoDrift,
-            "absolute top-[42%] right-[3%] hidden sm:block lg:top-[26%] lg:right-[5%]"
+            "pointer-events-none absolute top-[42%] right-[3%] hidden sm:block lg:top-[26%] lg:right-[5%]"
           )}
           style={depth(-30, -22, 60)}
         >
           <div className={styles.rookShadow} />
-          <Image
-            src="/designs/rook-cream.png"
-            alt=""
-            width={696}
-            height={900}
-            priority
-            sizes="(min-width: 1280px) 209px, (min-width: 1024px) 186px, 140px"
-            className={cn(
-              styles.float,
-              styles.rookImg,
-              "h-[180px] w-auto select-none lg:h-[240px] xl:h-[270px]"
+          <div className="relative h-[180px] w-[139px] lg:h-[240px] lg:w-[186px] xl:h-[270px] xl:w-[209px]">
+            <Image
+              src="/designs/rook-cream.png"
+              alt=""
+              width={696}
+              height={900}
+              priority
+              sizes="(min-width: 1280px) 209px, (min-width: 1024px) 186px, 139px"
+              className={cn(
+                styles.float,
+                styles.rookImg,
+                "h-full w-auto select-none transition-opacity duration-700",
+                sceneReady && showScene ? "opacity-0" : "opacity-100"
+              )}
+            />
+            {showScene && (
+              <div className="absolute -inset-[10%]">
+                <RookScene active={heroInView} onReady={handleSceneReady} />
+              </div>
             )}
-          />
+          </div>
         </div>
 
         {/* kicker — outer div owns the CSS depth, inner motion owns entrance */}
