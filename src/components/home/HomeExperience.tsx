@@ -42,15 +42,15 @@ function ThemedSite() {
   // The light theme scrolls the window; the dark theme scrolls an inner
   // h-dvh container. A leftover window scroll position would strand the
   // viewport past the end of the (viewport-tall) dark document — blank
-  // screen. Reset on every theme CHANGE (not on first mount, so anchor
-  // deep-links keep working when no switch happens).
-  const mountedRef = useRef(false);
+  // screen. Reset only when the theme actually CHANGES (comparing against
+  // the previous value keeps anchor deep-links working on mount, and is
+  // robust to Strict Mode's double effect run, unlike a first-mount flag).
+  const prevThemeRef = useRef(theme);
   useEffect(() => {
-    if (!mountedRef.current) {
-      mountedRef.current = true;
-      return;
+    if (prevThemeRef.current !== theme) {
+      prevThemeRef.current = theme;
+      window.scrollTo({ top: 0, behavior: "instant" });
     }
-    window.scrollTo({ top: 0, behavior: "instant" });
   }, [theme]);
 
   return (
