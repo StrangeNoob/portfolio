@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import BrutalistPage from "@/components/designs/brutalist/BrutalistPage";
 import { ThemeProvider, useTheme } from "./ThemeProvider";
@@ -38,6 +38,20 @@ function ThemedSite() {
     const t = setTimeout(() => setWipe(null), WIPE_MS);
     return () => clearTimeout(t);
   }, [wipe]);
+
+  // The light theme scrolls the window; the dark theme scrolls an inner
+  // h-dvh container. A leftover window scroll position would strand the
+  // viewport past the end of the (viewport-tall) dark document — blank
+  // screen. Reset on every theme CHANGE (not on first mount, so anchor
+  // deep-links keep working when no switch happens).
+  const mountedRef = useRef(false);
+  useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [theme]);
 
   return (
     <>
