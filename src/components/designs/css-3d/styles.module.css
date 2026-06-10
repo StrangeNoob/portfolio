@@ -1,0 +1,225 @@
+/* ============================================================
+   LAYERED DEPTH — CSS 3D editorial system
+   Warm paper, ink type, persimmon accent. No WebGL anywhere.
+   ============================================================ */
+
+.root {
+  --paper: #f7f1e6;
+  --paper-deep: #ece2cf;
+  --card: #fffdf6;
+  --ink: #1d1812;
+  --ink-soft: #5d554a;
+  --accent: #ff5a36;
+  --accent-ink: #b0350f;
+  --line: rgba(29, 24, 18, 0.16);
+
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-instrument), "Helvetica Neue", system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.root ::selection {
+  background: var(--accent);
+  color: #fff7ef;
+}
+
+.root :focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.display {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-optical-sizing: auto;
+}
+
+/* ---------- grain / noise overlay (pure CSS, no JS) ---------- */
+
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* ---------- hero 3D stage ---------- */
+
+.perspective {
+  perspective: 1100px;
+}
+
+.preserve3d {
+  transform-style: preserve-3d;
+}
+
+.heroStage {
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--py, 0) * -3.5deg))
+    rotateY(calc(var(--px, 0) * 4.5deg));
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.layerBack {
+  transform: translateZ(-70px);
+}
+.layerMid {
+  transform: translateZ(30px);
+}
+.layerFront {
+  transform: translateZ(80px);
+}
+
+/* decorative shapes — drift opposite the pointer at per-element depths
+   (--dx / --dy unitless factors, --dz a length) */
+.decoDrift {
+  transform: translate3d(
+    calc(var(--px, 0) * var(--dx, -20) * 1px),
+    calc(var(--py, 0) * var(--dy, -16) * 1px),
+    var(--dz, 0px)
+  );
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* idle bobbing uses the independent `translate` property so it
+   composes with the pointer-driven `transform` above */
+@keyframes bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -14px;
+  }
+}
+
+.float {
+  animation: bob 8s ease-in-out infinite;
+}
+
+.floatSlow {
+  animation: bob 12s ease-in-out infinite reverse;
+}
+
+@keyframes spinSlow {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.spin {
+  animation: spinSlow 48s linear infinite;
+}
+
+/* dotted halftone block */
+.dots {
+  background-image: radial-gradient(var(--line) 1.5px, transparent 1.5px);
+  background-size: 14px 14px;
+}
+
+/* ---------- 3D tilt cards ---------- */
+
+.tilt {
+  transform: perspective(900px) rotateX(var(--rx, 0deg))
+    rotateY(var(--ry, 0deg)) translateZ(0);
+  transition:
+    transform 0.16s ease-out,
+    box-shadow 0.35s ease;
+  will-change: transform;
+  box-shadow:
+    0 1px 2px rgba(29, 24, 18, 0.05),
+    0 6px 16px -8px rgba(29, 24, 18, 0.1);
+}
+
+.tiltLifted {
+  box-shadow:
+    0 1px 2px rgba(29, 24, 18, 0.06),
+    0 14px 28px -10px rgba(29, 24, 18, 0.18),
+    0 40px 80px -28px rgba(29, 24, 18, 0.28);
+}
+
+.glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--go, 0);
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    480px circle at var(--gx, 50%) var(--gy, 50%),
+    rgba(255, 255, 255, 0.65),
+    rgba(255, 255, 255, 0) 62%
+  );
+}
+
+/* ---------- skill flip cards ---------- */
+
+.flip {
+  perspective: 1000px;
+}
+
+.flipInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.35, 0.15, 0.2, 1);
+}
+
+@media (hover: hover) {
+  .flip:hover .flipInner {
+    transform: rotateY(180deg);
+  }
+}
+
+.flip:focus-visible .flipInner,
+.flipInner[data-flipped="true"] {
+  transform: rotateY(180deg);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.faceBack {
+  transform: rotateY(180deg);
+}
+
+/* ---------- reduced motion: flatten everything ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .heroStage,
+  .decoDrift,
+  .tilt {
+    transform: none !important;
+    transition: none !important;
+  }
+  .layerBack,
+  .layerMid,
+  .layerFront {
+    transform: none;
+  }
+  .float,
+  .floatSlow,
+  .spin {
+    animation: none;
+  }
+  .flipInner {
+    transition: none;
+  }
+  .glare {
+    display: none;
+  }
+}

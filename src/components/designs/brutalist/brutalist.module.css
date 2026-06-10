@@ -1,0 +1,42 @@
+/* BRUTALIST 3D MONOLITH — raw mechanics: snap scroll, marquee, hero tilt */
+
+.snapContainer {
+  scroll-snap-type: y proximity;
+  scroll-behavior: smooth;
+}
+
+.snapSection {
+  scroll-snap-align: start;
+}
+
+.marqueeTrack {
+  display: flex;
+  width: max-content;
+  animation: brutMarquee 26s linear infinite;
+}
+
+@keyframes brutMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.heroTilt {
+  transform: perspective(1100px) rotateX(12deg) rotateY(-5deg);
+  transform-style: preserve-3d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snapContainer {
+    scroll-behavior: auto;
+  }
+  .marqueeTrack {
+    animation: none;
+  }
+  .heroTilt {
+    transform: none;
+  }
+}

@@ -152,8 +152,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* CRT Scanline effect overlay */
-body::before {
+/* CRT Scanline effect overlay (suppressed on design exploration routes) */
+body:not(:has([data-design-root]))::before {
   content: '';
   position: fixed;
   inset: 0;
@@ -171,8 +171,8 @@ body::before {
   opacity: 0.3;
 }
 
-/* CRT Vignette border effect */
-body::after {
+/* CRT Vignette border effect (suppressed on design exploration routes) */
+body:not(:has([data-design-root]))::after {
   content: '';
   position: fixed;
   inset: 0;
