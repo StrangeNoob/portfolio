@@ -1,12 +1,15 @@
-/* BRUTALIST 3D MONOLITH — raw mechanics: snap scroll, marquee, hero tilt */
+/* BRUTALIST 3D MONOLITH — raw mechanics: marquee, hero tilt */
 
+/* Free scrolling: snap (y proximity) was removed because it re-targeted
+   the scroll position mid-gesture (measured +482px of unrequested movement
+   per ~2160px of input), which read as glitchy scrolling. smooth behavior
+   stays for nav anchor jumps only. */
 .snapContainer {
-  scroll-snap-type: y proximity;
   scroll-behavior: smooth;
 }
 
 .snapSection {
-  scroll-snap-align: start;
+  /* snap-align removed with container snap-type */
 }
 
 .marqueeTrack {
