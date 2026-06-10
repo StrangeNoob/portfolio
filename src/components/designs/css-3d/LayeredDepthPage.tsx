@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import styles from "./styles.module.css";
 import { Nav } from "./Nav";
@@ -10,14 +9,7 @@ import { Skills } from "./Skills";
 import { Contact } from "./Contact";
 import { Footer } from "./Footer";
 
-interface LayeredDepthPageProps {
-  /** show the fixed "← all designs" link (design-exploration routes only) */
-  showDesignsLink?: boolean;
-}
-
-export default function LayeredDepthPage({
-  showDesignsLink = true,
-}: LayeredDepthPageProps) {
+export default function LayeredDepthPage() {
   return (
     <div data-design-root id="top" className={cn(styles.root, "min-h-screen")}>
       {/* film-grain overlay, pure CSS */}
@@ -43,14 +35,6 @@ export default function LayeredDepthPage({
 
       <Footer />
 
-      {showDesignsLink && (
-        <Link
-          href="/designs"
-          className="fixed bottom-5 left-5 z-[60] border border-[rgba(29,24,18,0.25)] bg-[#fffdf6]/90 px-3 py-2 font-mono text-xs tracking-[0.15em] uppercase shadow-sm backdrop-blur-sm transition-colors hover:text-[#b0350f]"
-        >
-          ← all designs
-        </Link>
-      )}
     </div>
   );
 }

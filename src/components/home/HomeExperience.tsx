@@ -55,11 +55,7 @@ function ThemedSite() {
 
   return (
     <>
-      {theme === "dark" ? (
-        <BrutalistPage showDesignsLink={false} />
-      ) : (
-        <LayeredDepthPage showDesignsLink={false} />
-      )}
+      {theme === "dark" ? <BrutalistPage /> : <LayeredDepthPage />}
 
       <ThemeToggle />
 
