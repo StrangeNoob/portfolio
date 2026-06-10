@@ -22,6 +22,11 @@
   text-rendering: optimizeLegibility;
 }
 
+/* This design scrolls the window — ink-on-paper scrollbar at the root */
+:global(html):has(.root) {
+  scrollbar-color: rgba(29, 24, 18, 0.35) #ece2cf;
+}
+
 .root ::selection {
   background: var(--accent);
   color: #fff7ef;

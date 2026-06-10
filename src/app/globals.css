@@ -196,24 +196,34 @@ body:not(:has([data-design-root]))::after {
   color: var(--background);
 }
 
-/* Scrollbar styling - terminal style */
-::-webkit-scrollbar {
+/* Scrollbar styling - terminal style (legacy terminal pages only;
+   design routes style their own via the standard scrollbar-color) */
+html:not(:has([data-design-root]))::-webkit-scrollbar,
+html:not(:has([data-design-root])) ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-::-webkit-scrollbar-track {
+html:not(:has([data-design-root]))::-webkit-scrollbar-track,
+html:not(:has([data-design-root])) ::-webkit-scrollbar-track {
   background: var(--background);
   border-left: 1px solid var(--border);
 }
 
-::-webkit-scrollbar-thumb {
+html:not(:has([data-design-root]))::-webkit-scrollbar-thumb,
+html:not(:has([data-design-root])) ::-webkit-scrollbar-thumb {
   background: var(--terminal-green);
   opacity: 0.5;
 }
 
-::-webkit-scrollbar-thumb:hover {
+html:not(:has([data-design-root]))::-webkit-scrollbar-thumb:hover,
+html:not(:has([data-design-root])) ::-webkit-scrollbar-thumb:hover {
   background: var(--terminal-cyan);
+}
+
+/* Design routes: neutral dark scrollbar by default (aurora, holo) */
+html:has([data-design-root]) {
+  scrollbar-color: rgba(154, 154, 150, 0.45) transparent;
 }
 
 /* Focus styles for accessibility */

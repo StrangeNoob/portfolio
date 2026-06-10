@@ -28,7 +28,10 @@ export default function BrutalistPage({
         data-design-root
         className={cn(
           styles.snapContainer,
-          "h-dvh min-h-screen overflow-y-auto overflow-x-hidden bg-[#0c0c0c] text-base text-[#e8e8e4] antialiased [font-family:var(--font-brutal-mono)]",
+          // `relative` keeps absolute descendants (e.g. sr-only spans) inside
+          // this scroller's containing block — without it they anchor to the
+          // page and stretch the html element into a second scrollbar.
+          "relative h-dvh min-h-screen overflow-y-auto overflow-x-hidden bg-[#0c0c0c] text-base text-[#e8e8e4] antialiased [font-family:var(--font-brutal-mono)]",
         )}
       >
         <a
