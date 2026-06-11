@@ -30,7 +30,11 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-pressed={!dark}
-      aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
+      aria-label={
+        dark
+          ? "Switch to Paper, the light personality"
+          : "Switch to Concrete, the dark personality"
+      }
       className={
         dark
           ? "fixed right-5 bottom-5 z-[75] flex items-center gap-2 border border-[#3a3a3a] bg-[#0c0c0c]/90 px-3 py-2 font-mono text-[11px] font-bold tracking-[0.25em] text-[#9a9a96] uppercase backdrop-blur-sm transition-colors hover:border-[#ff2b00] hover:text-[#ff2b00] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
@@ -38,7 +42,7 @@ export function ThemeToggle() {
       }
     >
       <RookIcon className="h-4 w-4" />
-      {dark ? "Light" : "Dark"}
+      {dark ? "Paper" : "Concrete"}
     </button>
   );
 }
