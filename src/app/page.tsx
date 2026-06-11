@@ -1,36 +1,45 @@
-import { Hero } from '@/components/sections/Hero';
-import { About } from '@/components/sections/About';
-import { Experience } from '@/components/sections/Experience';
-import { Projects } from '@/components/sections/Projects';
-import { Skills } from '@/components/sections/Skills';
-import { Contact } from '@/components/sections/Contact';
+import { Anton, IBM_Plex_Mono, Fraunces, Instrument_Sans } from "next/font/google";
+import HomeExperience from "@/components/home/HomeExperience";
+
+/* Both theme personalities need their fonts available at the root:
+   Anton + IBM Plex Mono drive the brutalist dark theme, Fraunces +
+   Instrument Sans drive the layered-depth light theme. Variable names
+   must match the design components' CSS exactly. */
+const anton = Anton({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-brutal-display",
+  display: "swap",
+});
+
+const plexMono = IBM_Plex_Mono({
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  variable: "--font-brutal-mono",
+  display: "swap",
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+  axes: ["opsz"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const instrument = Instrument_Sans({
+  subsets: ["latin"],
+  variable: "--font-instrument",
+  style: ["normal", "italic"],
+  display: "swap",
+});
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
-      <Hero />
-      <About />
-      <Experience />
-      <Projects />
-      <Skills />
-      <Contact />
-
-      {/* Footer */}
-      <footer className="py-8 border-t border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-foreground-muted">
-              © {new Date().getFullYear()} Prateek Kumar Mohanty. All rights reserved.
-            </p>
-            <p className="text-sm text-foreground-muted">
-              Built with{' '}
-              <span className="text-accent-primary">Next.js</span>,{' '}
-              <span className="text-accent-secondary">Tailwind</span>, and{' '}
-              <span className="text-accent-tertiary">Framer Motion</span>
-            </p>
-          </div>
-        </div>
-      </footer>
-    </main>
+    <div
+      className={`${anton.variable} ${plexMono.variable} ${fraunces.variable} ${instrument.variable}`}
+    >
+      <HomeExperience />
+    </div>
   );
 }

@@ -1,0 +1,46 @@
+/* BRUTALIST 3D MONOLITH — raw mechanics: marquee, hero tilt */
+
+/* Free scrolling: snap (y proximity) was removed because it re-targeted
+   the scroll position mid-gesture (measured +482px of unrequested movement
+   per ~2160px of input), which read as glitchy scrolling. smooth behavior
+   stays for nav anchor jumps only. */
+.snapContainer {
+  scroll-behavior: smooth;
+  scrollbar-color: rgba(154, 154, 150, 0.55) #0c0c0c;
+}
+
+.snapSection {
+  /* snap-align removed with container snap-type */
+}
+
+.marqueeTrack {
+  display: flex;
+  width: max-content;
+  animation: brutMarquee 26s linear infinite;
+}
+
+@keyframes brutMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.heroTilt {
+  transform: perspective(1100px) rotateX(12deg) rotateY(-5deg);
+  transform-style: preserve-3d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snapContainer {
+    scroll-behavior: auto;
+  }
+  .marqueeTrack {
+    animation: none;
+  }
+  .heroTilt {
+    transform: none;
+  }
+}
