@@ -31,6 +31,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
+.env*
 
 # vercel
 .vercel
@@ -45,7 +46,6 @@ CLAUDE.md
 portfolio-copy.md
 .claude/
 .playwright-mcp/
-config.bat
 
 # CAD build outputs (regenerate via cad/*.py; site assets live in public/models)
 cad/*.glb
